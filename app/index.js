@@ -1,9 +1,14 @@
 const { app, BrowserWindow } = require('electron')
+const startServer = require('./server/bin/www')
 
-function createWindow () {
+function createWindow() {
+  startServer()
   const win = new BrowserWindow({
     width: 800,
-    height: 600
+    height: 600,
+    // webPreferences: {
+    //   webSecurity: false,
+    // },
   })
 
   win.loadFile('index.html')
