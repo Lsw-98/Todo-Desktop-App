@@ -1,0 +1,39 @@
+.menu-item{
+  background: white;
+  border: 0;
+  box-shadow: 0 0 1px 1px #dddadaad;
+  padding: 6px 10px;
+  border-radius: 2px;
+  transition: all 0.4s;
+  cursor: pointer;
+  text-align: left;
+  position: relative;
+  height: 36px;
+
+  &:hover{
+    box-shadow: 0 0 2px 2px #c7c5c5ad;
+  }
+
+  &-active{
+    background: rgb(239, 241, 252);
+    .menu-item-name{
+      color: #5656b4;
+      font-weight: bolder;
+    }
+  }
+
+  &-count{
+    position: absolute;
+    right: 12px;
+    background: #818189d0;
+    display: inline-block;
+    width: 20px;
+    line-height: 20px;
+    height: 20px;
+    text-align: center;
+    border-radius: 50%;
+    color: white;
+    font-size: 12px;
+    font-weight: bolder;
+  }
+}

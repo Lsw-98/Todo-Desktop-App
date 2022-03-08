@@ -1,0 +1,55 @@
+.task-item{
+  position: relative;
+  height: 80px;
+  padding: 10px;
+  box-shadow: 0 0 1px 1px #dddadaad;
+  border-radius: 2px;
+  align-items: center;
+  display: flex;
+  transition: all 0.4s;
+  cursor: pointer;
+
+  &:hover{
+    box-shadow: 0 0 2px 2px #c7c5c5ad;
+  }
+
+  &-info{
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 20px;
+  }
+
+  &-title{
+    margin-bottom: 10px;
+    font-size: 15px;
+  }
+
+  &-desc{
+    color: #7e7e7e;
+  }
+
+  &-endtime{
+    margin-bottom: 10px;
+    background: aliceblue;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #594ff7;
+  }
+
+  &-status{
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    right: 20px;
+  }
+
+  &-finish{
+    border: none;
+    background: #3a77ff;
+    color: white;
+    border-radius: 2px;
+    cursor: pointer;
+  }
+}
