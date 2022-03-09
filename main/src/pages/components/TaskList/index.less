@@ -1,6 +1,35 @@
 .task-list{
   flex: 1;
   margin: 0 10px;
+  .add-task-container{
+    padding: 10px;
+    margin: 0  10px;
+    box-shadow: 0 0 1px 1px #dddadaad;
+    transition: all 0.4s;
+    border-radius: 2px;
+    align-items: center;
+    height: 60px;
+    position: relative;
+    &-active{
+      height: 90px;
+    }
+    &:hover{
+      box-shadow: 0 0 2px 2px #c7c5c5ad;
+    }
+    .create-input{
+      position: absolute;
+      top: 10px;
+      width: calc(100% - 20px);
+    }
+    .time-tags{
+      position: absolute;
+      bottom: 10px;
+
+      .ant-tag{
+        cursor: pointer;
+      }
+    }
+  }
 
   .task-item{
     margin-bottom: 10px;

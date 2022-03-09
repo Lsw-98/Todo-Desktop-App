@@ -1,10 +1,15 @@
 # 记录开发过程中踩的坑以及开发过程
 
 # 所用技术栈
-react + umi + electron（开发桌面应用程序）+ express
+react + umi + electron（开发桌面应用程序）+ express + antd + IconPark（图标库）  
 
-# 安装umiJS
-umiJS官方网站：https://umijs.org/zh-CN/docs/getting-started  
+antd官网地址：https://ant.design/index-cn  
+umiJS官方地址：https://umijs.org/zh-CN/docs/getting-started   
+IconPark官方地址：https://iconpark.oceanengine.com/home   
+Electron官方地址：https://www.electronjs.org/zh/docs/latest/tutorial/quick-start  
+express官方地址：http://expressjs.com/en/starter/generator.html
+
+# 安装umiJS 
 安装命令：yarn create @umijs/umi-app
 ## <font color="#FF6347">文件名、目录名或卷标语法不正确</font>
 我在安装umiJS时，报一下错误:
@@ -36,8 +41,7 @@ yarn config set cache-folder "D:\Program Files\yarn\cache"
 ![avatar](/img/umiJS/umiJS%E5%AE%89%E8%A3%85%E6%88%90%E5%8A%9F.png)  
 安装成功
 
-# 安装Electron
-Electron官方网站：**https://www.electronjs.org/zh/docs/latest/tutorial/quick-start**  
+# 安装Electron 
 使用以下命令进行安装：
 ```js
 yarn init
@@ -181,3 +185,33 @@ function createWindow() {
 </html>
 ```
 4. 启动项目即可
+
+# 知识点：TypeScript中的PropsType
+在TypeScript中，使用接口对props进行类型限制，例如：
+```js
+// 对props进行类型限制
+interface IProps {
+  name: string    // 任务名称
+  count: number   // 计数器
+  active: boolean // 是否处于激活（选中）状态
+  icon?: ReactNode   // 图标
+  onClick: () => void
+}
+```
+
+TypeScript 的类型检查是静态的，PropTypes 可以在运行时进行检查。
+
+# 在IconPark中引入图标
+1. 复制图标SVG
+2. 新建组件Icon，贴入SVG
+```js
+// 在IconPark中引入一个加号图标
+
+export const PlusIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="48" height="48" fill="white" fillOpacity="0.01" />
+    <path d="M24.0607 10L24.024 38" stroke="#333" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M10 24L38 24" stroke="#333" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+)
+```
