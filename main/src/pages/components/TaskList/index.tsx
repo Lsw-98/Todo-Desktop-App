@@ -1,10 +1,9 @@
 import './index.less'
 import TaskItem from './TaskItem';
-import { DatePicker, Input, Tag, Button, Drawer, message } from 'antd'
+import { Input, Button, message } from 'antd'
 import { PlusIcon } from '@/components/Icon';
 import { useMemo, useState } from 'react'
 import moment from 'moment'
-import { quickTimeConfig } from './config';
 import TaskDetail from './TaskDetail';
 import QuickDateFormat from './QuickDateFormat';
 
@@ -28,12 +27,16 @@ export default function TaskList() {
   // activeTask：创建后的任务是否被选中
   const [activeTaskKey, setActiveTaskKey] = useState('')
 
-  // 被选中的任务
+  /*
+  * 被选中的任务
+  */
   const activeTask = useMemo(() => {
     return tasks.find(item => item.taskID === activeTaskKey)
   }, [tasks, activeTaskKey])
 
-  // 关闭抽屉
+  /*
+  * 关闭抽屉
+  */
   const onClose = () => {
     setActiveTaskKey('');
   };
@@ -67,11 +70,20 @@ export default function TaskList() {
 
   /*
   * 修改后提交表单事件
-  * taskID：完成的任务的id
+  * values：任务信息
   */
   const handleModify = (values: TaskType) => {
     setTasks([...tasks.filter(item => item.taskID !== activeTaskKey), values])
     message.success("修改成功！")
+  }
+
+  /*
+  * 删除任务事件
+  * taskID：完成的任务的id
+  */
+  const handleDel = (taskID: string) => {
+    // 将删除的任务过滤掉
+    setTasks([...tasks.filter(item => item.taskID !== taskID)])
   }
 
   return (
@@ -131,12 +143,12 @@ export default function TaskList() {
             <TaskItem
               key={item.title}
               title={item.title}
-              desc=''
               endTime={item.endTime}
               // 若被选中则处于激活状态，弹出抽屉(Drawer)
               active={activeTaskKey === item.taskID}
               onMore={() => setActiveTaskKey(item.taskID)}
               onFinish={() => handleFinish(item.taskID)}
+              onRemove={() => handleDel(item.taskID)}
             />
           ))
         }

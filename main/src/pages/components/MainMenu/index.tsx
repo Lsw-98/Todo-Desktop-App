@@ -18,7 +18,9 @@ export default function MainMenu() {
               count={item.count}
               onClick={() => {
                 setActiveKey(item.key)  // 变化activeKey以改变样式
-              }} />
+              }}
+              icon={item.icon}
+            />
           ))
         }
       </div>

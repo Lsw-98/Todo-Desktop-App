@@ -1,4 +1,4 @@
-// 配置Tag
+// 配置Tag标签
 export const quickTimeConfig = [
   {
     color: 'geekblue',
