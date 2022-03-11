@@ -5,8 +5,11 @@ import { PlusIcon } from '@/components/Icon';
 import { useMemo, useState } from 'react'
 import moment from 'moment'
 import { quickTimeConfig } from './config';
+import TaskDetail from './TaskDetail';
+import QuickDateFormat from './QuickDateFormat';
 
-type TaskType = {
+// 导出TaskType类型，给TaskDetail用
+export type TaskType = {
   taskID: string  // 任务ID
   title: string  // 任务标题
   desc: string  // 任务描述
@@ -25,7 +28,7 @@ export default function TaskList() {
   // activeTask：创建后的任务是否被选中
   const [activeTaskKey, setActiveTaskKey] = useState('')
 
-  // 被选中的人物的title
+  // 被选中的任务
   const activeTask = useMemo(() => {
     return tasks.find(item => item.taskID === activeTaskKey)
   }, [tasks, activeTaskKey])
@@ -34,13 +37,6 @@ export default function TaskList() {
   const onClose = () => {
     setActiveTaskKey('');
   };
-
-  /*
-  * value: 选择的时间
-  */
-  const handleSelectTime = (value: any) => {
-    setDdl(value)
-  }
 
   /*
   * 创建按钮事件
@@ -59,17 +55,13 @@ export default function TaskList() {
     setCurTitle('')
   }
 
-  /* 
-  * 快速获取并格式化今天/明天的日期
+  /*
+  * 点击完成按钮触发的事件
+  * taskID：完成的任务的id
   */
-  const handleQuickCreate = (offset: number) => {
-    // 获取当前时间戳
-    const nowTimeStamp = new Date()
-    // 获得时间字符串
-    const stringTime = nowTimeStamp.toLocaleDateString().split('/').join(' ') + ' 18:00:00'
-    // 使用moment格式化日期，加上一天，就是明天的日期
-    let formatTime = moment(stringTime).add(offset, 'd')   // .format('Y-M-D HH:mm:ss')
-    setDdl(formatTime)
+  const handleFinish = (taskID: string) => {
+    // 将已完成的任务过滤掉
+    setTasks([...tasks.filter(item => item.taskID !== taskID)])
   }
 
   return (
@@ -95,49 +87,32 @@ export default function TaskList() {
             value={curTitle} />
         </div>
         {
-          isCreate && (<div className='time-tags'>
-            {/* 
-              批量生成Tag标签
-            */}
-            {
-              quickTimeConfig.map((item) => (
-                <Tag
-                  key={item.offset}
-                  color={item.color}
-                  onClick={() => handleQuickCreate(item.offset)}>
-                  {item.title}
-                </Tag>
-              ))
-            }
-            {/* 
-              时间选择器，用于设置任务开始时间以及结束时间
-            */}
-            <DatePicker
-              showTime
-              onOk={handleSelectTime}
-              placeholder="选择任务结束时间"
-              value={ddl}
-              size='small'
-            />
-            <div className='operation-btns'>
-              <Button
-                danger
-                size='small'
-                // 撤销，将创建列表隐藏
-                onClick={() => { setIsCreate(false) }}
-                style={{ margin: '5px' }}>
-                撤销
-              </Button>
-              <Button
-                type="primary"
-                size='small'
-                onClick={handleCreate}
-                // 若title为空，则不可创建
-                disabled={curTitle === ''}>
-                创建
-              </Button>
+          isCreate && (
+            <div>
+              <QuickDateFormat
+                value={ddl}
+                onChange={(m) => { setDdl(m) }}
+              />
+              <div className='operation-btns'>
+                <Button
+                  danger
+                  size='small'
+                  // 撤销，将创建列表隐藏
+                  onClick={() => { setIsCreate(false) }}
+                  style={{ margin: '5px' }}>
+                  撤销
+                </Button>
+                <Button
+                  type="primary"
+                  size='small'
+                  onClick={handleCreate}
+                  // 若title为空，则不可创建
+                  disabled={curTitle === ''}
+                >
+                  创建
+                </Button>
+              </div>
             </div>
-          </div>
           )
         }
       </div>
@@ -153,21 +128,16 @@ export default function TaskList() {
               endTime={item.endTime}
               // 若被选中则处于激活状态，弹出抽屉(Drawer)
               active={activeTaskKey === item.taskID}
-              onClick={() => setActiveTaskKey(item.taskID)}
+              onMore={() => setActiveTaskKey(item.taskID)}
+              onFinish={() => handleFinish(item.taskID)}
             />
           ))
         }
       </div>
-      <Drawer
-        title={activeTask?.title}
-        placement="right"
+      <TaskDetail
+        task={activeTask}
         onClose={onClose}
-        visible={activeTaskKey !== ''}>
-
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-      </Drawer>
+      />
     </div>
   );
 }

@@ -215,3 +215,19 @@ export const PlusIcon = () => (
   </svg>
 )
 ```
+
+# 知识点：TypeScript语法下使用useState()可以对useState限制参数类型
+```js
+type TaskType = {
+  title: string  // 任务标题
+  desc: string  // 任务描述
+  endTime: moment.Moment   // 结束时间
+}
+
+// tasks：创建的任务
+const [tasks, setTasks] = useState<TaskType[]>([])
+```
+
+通过在外部定义tasks的类型，可以在useState后面紧跟着引用tasks的类型。
+
+# useMemo()
