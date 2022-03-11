@@ -10,7 +10,7 @@ Electron官方地址：https://www.electronjs.org/zh/docs/latest/tutorial/quick-
 express官方地址：http://expressjs.com/en/starter/generator.html
 
 # 安装umiJS 
-安装命令：yarn create @umijs/umi-app
+安装命令：yarn create @umijs/umi-app 
 ## <font color="#FF6347">文件名、目录名或卷标语法不正确</font>
 我在安装umiJS时，报一下错误:
 ```js

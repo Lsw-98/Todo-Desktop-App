@@ -8,10 +8,11 @@ import QuickDateFormat from '../QuickDateFormat'
 interface IProps {
   task?: TaskType
   onClose: () => void
+  onSubmit: (values: TaskType) => void
 }
 
 export default function TaskDetail(props: IProps) {
-  const { task, onClose } = props
+  const { task, onClose, onSubmit } = props
   const [title, setTitle] = useState('')
 
   const realTitle = useMemo(() => {
@@ -41,11 +42,18 @@ export default function TaskDetail(props: IProps) {
   }
 
   /*
-  * 提交表单
+  * 提交表单，更改任务信息
   * values: 表单值，为一个对象
   */
   const handleSubmit = (values: any) => {
-    console.log(values, realTitle);
+    onSubmit?.({
+      taskID: task?.taskID || '',
+      desc: values.desc || task?.desc,
+      title: realTitle,
+      endTime: values.endTime || task?.endTime
+    })
+    onClose()
+    
   };
 
   return (
@@ -53,12 +61,17 @@ export default function TaskDetail(props: IProps) {
       className='task-detail'
       title={renderTitle()}
       placement="right"
-      onClose={onClose}
+      onClose={() => {
+        onClose()
+        // 清空title，否则会影响下一次创建
+        setTitle("")
+      }}
       visible={task !== undefined}
       closable={false}
     >
       <Form
         onFinish={handleSubmit}
+        initialValues={task}
       >
         <div className='form-item-container'>
           <div className='form-item-icon'>日期：</div>
@@ -78,7 +91,14 @@ export default function TaskDetail(props: IProps) {
         </div>
 
         <Form.Item>
-          <Button className='submit-btn' type='primary' htmlType='submit'>提交</Button>
+          <Button
+            className='submit-btn'
+            type='primary'
+            htmlType='submit'
+            disabled={realTitle === ''}
+          >
+            提交
+          </Button>
         </Form.Item>
       </Form>
     </Drawer>

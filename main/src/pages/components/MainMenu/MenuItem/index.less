@@ -1,31 +1,52 @@
 .menu-item{
   background: white;
   border: 0;
-  box-shadow: 0 0 1px 1px #dddadaad;
   padding: 6px 10px;
   border-radius: 2px;
-  transition: all 0.4s;
   cursor: pointer;
   text-align: left;
   position: relative;
   height: 36px;
+  box-shadow: 0 0 2px 1px #c9def3;  
+  transition: all 0.4s;
 
   &:hover{
-    box-shadow: 0 0 2px 2px #c7c5c5ad;
+    box-shadow: none;
   }
 
   &-active{
-    background: rgb(239, 241, 252);
+    background: #7d99ff;
+    transform: translateX(15px);
+    border-radius: 100px 2px 2px 100px;
+    position: relative;
+    box-shadow: 0 0px 2px 0px #7d99ff;
+    &::after{
+      content: "";
+      width: 0px;
+      height: 0px;
+      position: absolute;
+      right: 1px;
+      bottom: -4px;
+      border-left: 2px solid #7d99ff;
+      border-right: 2px solid transparent;
+      border-top: 2px solid #7d99ff;
+      border-bottom: 2px solid transparent;
+    }
     .menu-item-name{
-      color: #5656b4;
+      color: white;
       font-weight: bolder;
     }
+  }
+
+  &-name{
+
   }
 
   &-count{
     position: absolute;
     right: 12px;
-    background: #818189d0;
+    background: #fa2858c7;
+    box-shadow: 0 0 2px 1px #d90a42e6;
     display: inline-block;
     width: 20px;
     line-height: 20px;

@@ -1,6 +1,6 @@
 import './index.less'
 import TaskItem from './TaskItem';
-import { DatePicker, Input, Tag, Button, Drawer } from 'antd'
+import { DatePicker, Input, Tag, Button, Drawer, message } from 'antd'
 import { PlusIcon } from '@/components/Icon';
 import { useMemo, useState } from 'react'
 import moment from 'moment'
@@ -53,6 +53,7 @@ export default function TaskList() {
     setIsCreate(false)
     // 清空输入框内容
     setCurTitle('')
+    message.success("创建成功！")
   }
 
   /*
@@ -64,11 +65,17 @@ export default function TaskList() {
     setTasks([...tasks.filter(item => item.taskID !== taskID)])
   }
 
+  /*
+  * 修改后提交表单事件
+  * taskID：完成的任务的id
+  */
+  const handleModify = (values: TaskType) => {
+    setTasks([...tasks.filter(item => item.taskID !== activeTaskKey), values])
+    message.success("修改成功！")
+  }
+
   return (
     <div className='task-list'>
-      <div>
-        <h1 className="title">任务列表</h1>
-      </div>
       <div className={`add-task-container ${isCreate ? 'add-task-container-active' : ''}`}>
         <div className='standard-container create-input'>
           {/* 添加任务图标 */}
@@ -137,6 +144,7 @@ export default function TaskList() {
       <TaskDetail
         task={activeTask}
         onClose={onClose}
+        onSubmit={handleModify}
       />
     </div>
   );
