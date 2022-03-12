@@ -1,3 +1,7 @@
+/*
+* todoList侧边栏组件
+*/
+
 import './index.less'
 import MenuItem from './MenuItem';
 import config from './config';

@@ -230,4 +230,19 @@ const [tasks, setTasks] = useState<TaskType[]>([])
 
 通过在外部定义tasks的类型，可以在useState后面紧跟着引用tasks的类型。
 
-# useMemo()
+# react.memo和useMemo()
+## 什么是 memoization？
+memoization是一个过程，允许我们<font color="#FF6347">缓存递归/昂贵的函数调用值</font>，在下次使用相同参数调用函数时，直接返回缓存之还不是重新计算。有时我们的代码会做很多冗余的操作，使性能变差。使用memoization可以使我们的程序运行得更快，提高性能。
+
+## React中的memoization
+在React函数组件中，当组件中的某些props发生变化时，默认情况下整个组件都会重新渲染，包括其它未更改的props值。如果一个组件显示上万条数据，每个用户点击一次按钮，该组件中的每条数据都会重新渲染一次，这将是很大的开销。所以必须要使用memoization对这些数据进行管理，提升性能。
+
+## React.memo
+<font color="#FF6347">React.memo是一个高阶组件(HOC)</font>。它接受一个组件A作为参数并返回一个组件B，如果组件B中的props没有改变，则组件B会阻止组件A重新渲染。使用方法就是在想要监听的组件外包裹React.meo。例如：React.memo(component)
+
+## useMemo
+使用 useMemo()，我们可以返回<font color="#FF6347">记忆值</font>来避免函数的依赖项没有改变的情况下重新渲染。
+
+## React.memo和useMemo的区别
+ - React.memo是一个高阶组件，我们可以使用它来<font color="#FF6347">包装我们不想重新渲染的组件</font>，除非其中的props发生变化。
+ - useMemo()是一个react hooks，我们可以使用它<font color="#FF6347">在组件中包装函数，确保依赖项之一发生变化，才重新渲染。</font>

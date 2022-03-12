@@ -1,10 +1,15 @@
-import { Button, DatePicker, Drawer, Form, Input, Tag } from 'antd'
+/*
+* 任务详情信息抽屉
+* 任务详情页组件
+*/
+
+import { Button, Drawer, Form, Input } from 'antd'
 import './index.less'
 import { TaskType } from '..'
 import { useMemo, useState } from 'react'
-import { quickTimeConfig } from '../config'
 import QuickDateFormat from '../QuickDateFormat'
 
+// 对props进行类型限制
 interface IProps {
   task?: TaskType
   onClose: () => void
@@ -13,10 +18,12 @@ interface IProps {
 
 export default function TaskDetail(props: IProps) {
   const { task, onClose, onSubmit } = props
+  // title：详情页的title，用于修改任务title
   const [title, setTitle] = useState('')
 
+  // realTile：修改后的title
   const realTitle = useMemo(() => {
-    // 若当前title有值，则选用title，若没有则判断task.title的值
+    // 若当前title（修改了的title）有值，则选用title，若没有则判断task.title的值
     // 优先使用更改后的title
     return title ? title : (task?.title || '')
   }, [title, task])
@@ -28,6 +35,7 @@ export default function TaskDetail(props: IProps) {
     return (
       <Input
         name='title'
+        // 变为受控组件
         value={realTitle}
         onChange={handleTitleChange}
       />
@@ -43,9 +51,11 @@ export default function TaskDetail(props: IProps) {
 
   /*
   * 提交表单，更改任务信息
-  * values: 表单值，为一个对象
+  * values: 表单提交对象
   */
   const handleSubmit = (values: any) => {
+    // console.log(values);
+
     onSubmit?.({
       taskID: task?.taskID || '',
       desc: values.desc || task?.desc,
@@ -53,7 +63,7 @@ export default function TaskDetail(props: IProps) {
       endTime: values.endTime || task?.endTime
     })
     onClose()
-    
+
   };
 
   return (
@@ -67,6 +77,7 @@ export default function TaskDetail(props: IProps) {
         setTitle("")
       }}
       visible={task !== undefined}
+      // closable：是否显示左上角的关闭按钮
       closable={false}
     >
       <Form

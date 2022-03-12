@@ -1,9 +1,15 @@
+/*
+* 将日期标签、时间选择器封装为一个组件
+* 两个功能会用到这个组件：创建任务和修改任务功能
+* 快速创建日期组件
+*/
+
 import { DatePicker, Tag } from 'antd'
 import moment from 'moment'
-import { useState } from 'react'
 import { quickTimeConfig } from '../config'
 import './index.less'
 
+// 限制props类型
 interface IProps {
   value?: moment.Moment
   onChange?: (v: moment.Moment) => void
@@ -30,6 +36,7 @@ export default function QuickDateFormat(props: IProps) {
     <div className='time-tags'>
       {/* 
         批量生成Tag标签
+        选择标签就可以快速选择到标签上的时间
       */}
       {
         quickTimeConfig.map((item) => (

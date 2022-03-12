@@ -1,3 +1,7 @@
+/*
+* 创建任务组件
+*/
+
 import './index.less'
 import TaskItem from './TaskItem';
 import { Input, Button, message } from 'antd'
@@ -9,7 +13,7 @@ import QuickDateFormat from './QuickDateFormat';
 
 // 导出TaskType类型，给TaskDetail用
 export type TaskType = {
-  taskID: string  // 任务ID
+  taskID: string  // 任务ID，当前的时间戳
   title: string  // 任务标题
   desc: string  // 任务描述
   endTime: moment.Moment   // 结束时间
@@ -93,9 +97,8 @@ export default function TaskList() {
           {/* 添加任务图标 */}
           <PlusIcon />
           {/* 
-          创建任务输入框
-          onBlur：事件会在对象失去焦点时发生
-         */}
+            创建任务输入框
+          */}
           <Input
             placeholder='创建任务'
             onFocus={() => { setIsCreate(true) }}
@@ -117,7 +120,7 @@ export default function TaskList() {
                   danger
                   size='small'
                   // 撤销，将创建列表隐藏
-                  onClick={() => { setIsCreate(false) }}
+                  onClick={() => { setIsCreate(false); setCurTitle('') }}
                   style={{ margin: '5px' }}>
                   撤销
                 </Button>
