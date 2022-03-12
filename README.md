@@ -230,7 +230,7 @@ const [tasks, setTasks] = useState<TaskType[]>([])
 
 通过在外部定义tasks的类型，可以在useState后面紧跟着引用tasks的类型。
 
-# react.memo和useMemo()
+# 知识点：react.memo和useMemo()
 ## 什么是 memoization？
 memoization是一个过程，允许我们<font color="#FF6347">缓存递归/昂贵的函数调用值</font>，在下次使用相同参数调用函数时，直接返回缓存之还不是重新计算。有时我们的代码会做很多冗余的操作，使性能变差。使用memoization可以使我们的程序运行得更快，提高性能。
 
@@ -246,3 +246,22 @@ memoization是一个过程，允许我们<font color="#FF6347">缓存递归/昂�
 ## React.memo和useMemo的区别
  - React.memo是一个高阶组件，我们可以使用它来<font color="#FF6347">包装我们不想重新渲染的组件</font>，除非其中的props发生变化。
  - useMemo()是一个react hooks，我们可以使用它<font color="#FF6347">在组件中包装函数，确保依赖项之一发生变化，才重新渲染。</font>
+
+# 项目问题：express如何解决跨域问题
+在app.js中配置如下代码：
+```js
+app.all("*", function (req, res, next) {
+  //设置允许跨域的域名，*代表允许任意域名跨域
+  res.header("Access-Control-Allow-Origin", "http://localhost:8000");
+  //允许的header类型
+  res.header("Access-Control-Allow-Headers", "content-type");
+  //跨域允许的请求方式
+  res.header("Access-Control-Allow-Methods", "DELETE,PUT,POST,GET,OPTIONS");
+  if (req.method.toLowerCase() == 'options')
+    res.send(200);  //让options尝试请求快速结束
+  else
+    next();
+});
+```
+
+# 

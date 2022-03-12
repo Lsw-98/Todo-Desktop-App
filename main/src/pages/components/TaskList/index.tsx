@@ -10,6 +10,8 @@ import { useMemo, useState } from 'react'
 import moment from 'moment'
 import TaskDetail from './TaskDetail';
 import QuickDateFormat from './QuickDateFormat';
+import apiConfig from '@/api/config';
+import { api, postApi } from '@/api';
 
 // 导出TaskType类型，给TaskDetail用
 export type TaskType = {
@@ -50,17 +52,25 @@ export default function TaskList() {
   */
   const handleCreate = () => {
     const taskID = Date.now().toString()
-    setTasks([...tasks, {
+    const newTask = {
       title: curTitle,
       desc: '',
       endTime: ddl,
       taskID
-    }])
-    // 任务创建成功，收起任务创建列表
-    setIsCreate(false)
-    // 清空输入框内容
-    setCurTitle('')
-    message.success("创建成功！")
+    }
+
+    postApi(apiConfig.create.url, newTask).then(data => {
+      console.log(data, 'create-api');
+
+      setTasks([...tasks, newTask])
+      // 任务创建成功，收起任务创建列表
+      setIsCreate(false)
+      // 清空输入框内容
+      setCurTitle('')
+      message.success("创建成功！")
+    }).catch(err => {
+      console.log(err);
+    })
   }
 
   /*
