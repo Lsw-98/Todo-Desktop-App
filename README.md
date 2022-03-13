@@ -264,4 +264,64 @@ app.all("*", function (req, res, next) {
 });
 ```
 
-# 
+# 知识点：useEffect
+```js
+useEffect(() => {
+  // effect函数
+  first
+
+  return () => {
+    // 返还函数
+    second
+  }
+}, [third])
+```
+ - 第一个参数进行发送请求，修改数据
+ - 第二个参数是return的返还函数，在组件将要卸载时做一些事情
+ - 第三个参数是函数依赖项，如果函数依赖想发生变化，才会执行useEffect函数  
+## *useEffect的执行机制
+ - 挂载阶段：先执行useEffect函数，并把effect函数存入队列等待执行
+ - 挂在完成：执行effect函数队列
+## *更新阶段
+ - 执行新的useEffect函数，并将新的effect函数存入队列等待执行
+ - 执行effect函数和返还函数队列，并观察是否有依赖参数, 有依赖参数, 追踪依赖参数是否改变, 改变执行, 没有改变不执行
+## *卸载阶段
+ - 执行返还函数队列
+
+# 知识点：Object.assign
+Object.assign方法用来将源对象（source）的所有可枚举属性，复制到目标对象（target）。它至少需要两个对象作为参数，第一个参数是目标对象，后面的参数都是源对象。
+
+```js
+let targetObj1 = { a: 1 };
+let sourceObj1 = { b: 1 };
+let sourceObj11 = { c: 3 };
+Object.assign(targetObj1, sourceObj1, sourceObj11);
+console.log(targetObj1);  // { a: 1, b: 1, c: 3 } 
+```
+
+如果目标对象与源对象有同名属性，或多个源对象有同名属性，则后面的属性会覆盖前面的属性。
+```js
+let targetObj1 = { a: 1, b: 2 };
+let sourceObj1 = { b: 1 };
+let sourceObj11 = { c: 3 };
+Object.assign(targetObj1, sourceObj1, sourceObj11);
+console.log(targetObj1);  // { a: 1, b: 1, c: 3 } 
+```
+
+如果只有一个参数，Object.assign会直接返回该参数。
+```js
+let targetObj1 = { a: 4 }
+Object.assign(targetObj1);
+console.log(targetObj1)   // { a: 4 }
+```
+
+# 项目难点：统一管理taskItem和menu
+2022/3/13  
+之前主要在开发任务列表这一块，菜单项只是简单写了一个active属性，判断当前选中的菜单项是哪一个，然后高亮显示。今天考虑到在不同的菜单项下（已完成/进行中）显示的任务列表是不同的，就将<font color="#FF6347">activeKey（当前激活的是已完成/进行中的其中一项）</font>提到最外层管理，然后将<font color="#FF6347">activeKey</font>分别传给TaskList和MainMenu组件，让TaskList和MainMenu组件根据activeKey展示不同的内容。在此记录一下。
+
+做法：
+1. 首先在最外层组件创建了一个tab状态，表示菜单栏状态，默认选中进行中的任务；
+2. 将tab传给TaskList和MainMenu组件，再给MainMenu组件传一个onChange()函数，用于在点击菜单栏时改变<font color="#FF6347">tab状态</font>；
+3. 在TaskList中使用useEffect，将activeKey当作useEffect的依赖项，当activeKey变化时，才会触发useEffect中的函数；
+
+其实这里只是一个简单的父子组件通信过程，但是将状态提升到父组件这种思想先开始并没有考虑到，在两个组件的公共父组件中管理状态比较方便，省去了很多不必要的操作。

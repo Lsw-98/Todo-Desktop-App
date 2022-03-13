@@ -6,22 +6,31 @@ import './index.less'
 import TaskItem from './TaskItem';
 import { Input, Button, message } from 'antd'
 import { PlusIcon } from '@/components/Icon';
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import moment from 'moment'
 import TaskDetail from './TaskDetail';
 import QuickDateFormat from './QuickDateFormat';
 import apiConfig from '@/api/config';
-import { api, postApi } from '@/api';
+import { api, getApi, postApi } from '@/api';
+import { API_RESULT, TASK_STATUS } from '@/const';
 
 // 导出TaskType类型，给TaskDetail用
 export type TaskType = {
   taskID: string  // 任务ID，当前的时间戳
   title: string  // 任务标题
   desc: string  // 任务描述
-  endTime: moment.Moment   // 结束时间
+  startTime: moment.Moment // 开始时间
+  endTime: moment.Moment   // 结束时间 
+  status: 0 | 1   // 任务当前状态
 }
 
-export default function TaskList() {
+interface IProps {
+  activeKey: number
+}
+
+export default function TaskList(props: IProps) {
+  // 存当前激活的是哪个菜单项，以便展示对应菜单项的内容
+  const { activeKey } = props
   // isCreate：任务是否正在创建，若正在创建则显示任务创建列表
   const [isCreate, setIsCreate] = useState(false)
   // ddl：格式化后的日期
@@ -32,6 +41,34 @@ export default function TaskList() {
   const [curTitle, setCurTitle] = useState('')
   // activeTask：创建后的任务是否被选中
   const [activeTaskKey, setActiveTaskKey] = useState('')
+
+  useEffect(() => {
+    getLastestList()
+  }, [activeKey])
+
+  // 得到最新的任务列表
+  const getLastestList = () => {
+    getApi(apiConfig.list.url, {
+      type: activeKey
+    }).then(res => {
+      // 如果请求成功
+      if (res.code === API_RESULT.SUCCESS) {
+        // 遍历请求结果，存储到新的数组中
+        const LastestList = res.data.map((item: TaskType) => {
+          // 用moment格式覆盖字符串格式的endTime
+          return Object.assign(item, {
+            endTime: moment(item.endTime)
+          })
+        })
+        setTasks(LastestList)
+      } else {
+        // 请求失败
+      }
+    }).catch(err => {
+      console.log(err);
+    })
+  }
+
 
   /*
   * 被选中的任务
@@ -55,14 +92,15 @@ export default function TaskList() {
     const newTask = {
       title: curTitle,
       desc: '',
+      startTime: moment(),
       endTime: ddl,
-      taskID
+      taskID,
+      status: TASK_STATUS.DOING,
     }
 
     postApi(apiConfig.create.url, newTask).then(data => {
-      console.log(data, 'create-api');
-
-      setTasks([...tasks, newTask])
+      // 任务创建后更新任务列表
+      getLastestList()
       // 任务创建成功，收起任务创建列表
       setIsCreate(false)
       // 清空输入框内容
@@ -78,8 +116,11 @@ export default function TaskList() {
   * taskID：完成的任务的id
   */
   const handleFinish = (taskID: string) => {
-    // 将已完成的任务过滤掉
-    setTasks([...tasks.filter(item => item.taskID !== taskID)])
+    const finishTask = tasks.find(item => item.taskID === taskID)
+    handleModify(Object.assign({}, finishTask, {
+      status: TASK_STATUS.DONE
+    }))
+    getLastestList()
   }
 
   /*
@@ -87,8 +128,17 @@ export default function TaskList() {
   * values：任务信息
   */
   const handleModify = (values: TaskType) => {
-    setTasks([...tasks.filter(item => item.taskID !== activeTaskKey), values])
-    message.success("修改成功！")
+    postApi(apiConfig.update.url, values).then(res => {
+      if (res.code === API_RESULT.SUCCESS) {
+        message.success("修改成功！")
+        // 拿到修改后最新的列表
+        getLastestList()
+      } else {
+        message.error(res.msg);
+      }
+    }).catch(err => {
+      console.log(err);
+    })
   }
 
   /*
@@ -97,7 +147,17 @@ export default function TaskList() {
   */
   const handleDel = (taskID: string) => {
     // 将删除的任务过滤掉
-    setTasks([...tasks.filter(item => item.taskID !== taskID)])
+    postApi(apiConfig.remove.url, { taskID }).then(res => {
+      if (res.code === API_RESULT.SUCCESS) {
+        message.success("删除成功！")
+        // 拿到删除后最新的列表
+        getLastestList()
+      } else {
+        message.error(res.msg);
+      }
+    }).catch(err => {
+      console.log(err);
+    })
   }
 
   return (

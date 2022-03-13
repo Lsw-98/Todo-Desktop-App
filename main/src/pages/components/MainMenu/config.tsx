@@ -1,16 +1,17 @@
 import { DoingIcon, DoneIcon } from "@/components/Icon"
+import { MENU_KEY } from "@/const"
 
 const config = [
   {
     name: "进行中",
-    key: "doing",
+    key: MENU_KEY.DOING,
     count: 1,
     icon: () => <DoingIcon />,
   },
 
   {
     name: "已完成",
-    key: "done",
+    key: MENU_KEY.DONE,
     count: 10,
     icon: () => <DoneIcon />,
   },
