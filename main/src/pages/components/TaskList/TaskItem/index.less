@@ -18,6 +18,11 @@
     background: rgb(239, 241, 252);
   }
 
+  &-date{
+    display: flex;
+    align-items: center;
+  }
+
   &-info{
     display: flex;
     flex-direction: column;
@@ -34,6 +39,13 @@
   &-title{
     margin-bottom: 10px;
     font-size: 15px;
+    // &-timeout{
+    //   color: #fc4f57;
+    // }
+  }
+
+  &-timeouttask{
+    color: #fc4f57;
   }
 
   &-desc{
@@ -48,6 +60,17 @@
     color: #594ff7;
     width: 120px;
     margin-bottom: 2px;
+    margin-right: 4px;
+  }
+
+  &-timeout{
+    background: #fc4f57;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #ffffff;
+    margin-bottom: 2px;
+    margin-right: 4px;
   }
 
   &-status{

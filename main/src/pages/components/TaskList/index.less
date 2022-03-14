@@ -1,37 +1,9 @@
 .task-list{
   flex: 1;
   background: #fcfcfc;
-  .add-task-container{
-    padding: 10px;
-    margin: 0  10px;
-    transition: all 0.4s;
-    border-radius: 4px;
-    align-items: center;
-    height: 60px;
-    position: relative;
-    box-shadow: 5px 5px 10px #d1d1d1, -5px -5px 10px #ffffff;   
-    background: #fcfcfc;
+  & > div:nth-child(1){
     margin-top: 60px;
-
-    &-active{
-      height: 90px;
-    }
-    &:hover{
-      box-shadow: 0 0 2px 2px #c7c5c5ad;
-    }
-    .create-input{
-      position: absolute;
-      top: 10px;
-      width: calc(100% - 20px);
-    }
   }
-
-  .operation-btns{
-    position: absolute;
-    right: 10px;
-    bottom: 10px;
-  }
-
   .task-item{
     margin-bottom: 10px;
     &-container{

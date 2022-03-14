@@ -5,6 +5,9 @@
 
 import './index.less'
 import moment from 'moment'
+import { useMemo } from 'react'
+
+moment.locale('zh-CN');
 
 // 对props进行类型限制
 interface IProps {
@@ -20,24 +23,25 @@ interface IProps {
 
 export default function TaskItem(props: IProps) {
   const { title, endTime, active = false, onMore, onFinish, onRemove } = props
+  const isTimeOut = useMemo(() => {
+    return endTime.diff(moment())
+  }, [endTime])
+  // 
   return (
     // 如果被选中，就增加选中的样式
     <div className={`task-item ${active ? 'task-item-active' : ''}`}>
-      <div className='task-item-info' onClick={onMore}>
-        <div className="task-item-title">
-          {title}
-        </div>
-        <div className="task-item-endtime">
-          {endTime.format('Y-M-D HH:mm:ss')}
+      <div className="task-item-info" onClick={onMore}>
+        <div className={`task-item-title ${isTimeOut < 0 ? 'task-item-timeouttask' : ''}`}>{title}</div>
+        <div className="task-item-date">
+          <div className="task-item-endtime">{endTime.format('Y-M-D HH:mm:ss')}</div>
+          {
+            isTimeOut < 0 && <div className="task-item-timeout">{`${endTime.fromNow()}已截止`}</div>
+          }
         </div>
       </div>
       <div className="task-item-status">
-        <button className="task-item-finish" onClick={onFinish}>
-          已完成
-        </button>
-        <button className="task-item-del" onClick={onRemove}>
-          删除
-        </button>
+        <button className="task-item-finish" onClick={onFinish}>已完成</button>
+        <button className="task-item-del" onClick={onRemove}>删除</button>
       </div>
     </div >
   );

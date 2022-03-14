@@ -26,7 +26,7 @@ export default function QuickDateFormat(props: IProps) {
     // 获取当前时间戳
     const nowTimeStamp = new Date()
     // 获得时间字符串
-    const stringTime = nowTimeStamp.toLocaleDateString().split('/').join(' ') + ' 18:00:00'
+    const stringTime = nowTimeStamp.toISOString().split('T')[0] + 'T10:00:00.000Z'
     // 使用moment格式化日期，加上一天，就是明天的日期
     let formatTime = moment(stringTime).add(offset, 'd')   // .format('Y-M-D HH:mm:ss')
     onChange?.(formatTime)
