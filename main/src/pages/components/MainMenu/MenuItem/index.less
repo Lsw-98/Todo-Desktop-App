@@ -2,12 +2,11 @@
   background: white;
   border: 0;
   padding: 6px 10px;
-  border-radius: 2px;
+  border-radius: var(--radius);
   cursor: pointer;
   text-align: left;
   position: relative;
-  height: 36px;
-  box-shadow: 0 0 2px 1px #c9def3;  
+  height: 40px;
   transition: all 0.4s;
   display: flex;
   align-items: center;
@@ -17,49 +16,35 @@
   }
 
   &:hover{
-    box-shadow: none;
-  }
+    background: #eee;
+  }  
 
   &-active{
-    background: #7d99ff;
-    transform: translateX(15px);
-    border-radius: 100px 2px 2px 100px;
-    position: relative;
-    box-shadow: 0 0px 2px 0px #7d99ff;
-    &::after{
-      content: "";
-      width: 0px;
-      height: 0px;
-      position: absolute;
-      right: 1px;
-      bottom: -4px;
-      border-left: 2px solid #7d99ff;
-      border-right: 2px solid transparent;
-      border-top: 2px solid #7d99ff;
-      border-bottom: 2px solid transparent;
+    background: var(--mainColor);
+    position: relative;   
+    &:hover{
+      background: var(--mainColor);
     }
     .menu-item-name{
       color: white;
-      font-weight: bolder;
     }
   }
 
   &-name{
-
+    
   }
 
   &-count{
     position: absolute;
     right: 12px;
-    background: #fa2858c7;
-    box-shadow: 0 0 2px 1px #d90a42e6;
+    background: #fff;
     display: inline-block;
     width: 20px;
     line-height: 20px;
     height: 20px;
     text-align: center;
     border-radius: 50%;
-    color: white;
+    color: var(--mainColor);
     font-size: 12px;
     font-weight: bolder;
   }

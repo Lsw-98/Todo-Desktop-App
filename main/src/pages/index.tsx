@@ -14,13 +14,12 @@ export default function IndexPage() {
   return (
     <div className='page container'>
       <MainMenu activeKey={tab} onChange={seTtab} updateFlag={updateFlag} />
-      <div style={{ flex: 1, background: '#fcfcfc' }}>
+      <div style={{ flex: 1, background: 'rgb(234, 234, 234)' }}>
         <TaskToolBar />
         {
           [MENU_KEY.DOING, MENU_KEY.DONE].includes(tab) && (
             <TaskList activeKey={tab} onCountChange={() => setUpdateFlag((pre) => pre + 1)} />
           )
-
         }
         {
           tab === MENU_KEY.CALENDAR && <TaskCalendar />

@@ -6,15 +6,14 @@
 import './index.less'
 import moment from 'moment'
 import { useMemo } from 'react'
+import { TaskType } from '..';
+import { TASK_STATUS } from '@/const';
 
 moment.locale('zh-CN');
 
 // 对props进行类型限制
 interface IProps {
-  title: string  // 任务标题
-  // startTime: string   // 开始时间
-  endTime: moment.Moment   // 结束时间
-  // status: string    // 当前任务状态
+  task: TaskType
   active: boolean    // 当前任务是否被选中，默认值为false
   onMore: () => void   // 更多操作按钮点击事件
   onFinish: () => void   // 任务完成按钮点击事件
@@ -22,7 +21,10 @@ interface IProps {
 }
 
 export default function TaskItem(props: IProps) {
-  const { title, endTime, active = false, onMore, onFinish, onRemove } = props
+  const { task, active = false, onMore, onFinish, onRemove } = props
+  const { endTime, title, status } = task
+
+  // 比较当前时间和任务截止事件，判断是否超时
   const isTimeOut = useMemo(() => {
     return endTime.diff(moment())
   }, [endTime])
@@ -40,7 +42,11 @@ export default function TaskItem(props: IProps) {
         </div>
       </div>
       <div className="task-item-status">
-        <button className="task-item-finish" onClick={onFinish}>已完成</button>
+        <button className="task-item-finish" onClick={onFinish}>
+          {
+            status === TASK_STATUS.DOING ? "完成" : "重启任务"
+          }
+        </button>
         <button className="task-item-del" onClick={onRemove}>删除</button>
       </div>
     </div >

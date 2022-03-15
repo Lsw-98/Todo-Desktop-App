@@ -55,7 +55,7 @@ export default function TaskCalendar(props: IProps) {
         dueDateClass: '',
         end: item.endTime.toISOString().split('.')[0] + 'Z',
         start: item.startTime.toISOString().split('.')[0] + 'Z',
-        bgColor: '#7d99ff',
+        bgColor: '#2261e4',
         color: 'white',
         borderColor: '#204df8',
         isReadOnly: true,

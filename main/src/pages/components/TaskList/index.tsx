@@ -4,7 +4,7 @@
 
 import './index.less'
 import TaskItem from './TaskItem';
-import { Calendar, message } from 'antd'
+import { message } from 'antd'
 import { useEffect, useMemo, useState } from 'react'
 import moment from 'moment'
 import TaskDetail from './TaskDetail';
@@ -13,7 +13,6 @@ import { api, getApi, postApi } from '@/api';
 import { API_RESULT, MENU_KEY, TASK_STATUS, VIEW_MODE } from '@/const';
 import TaskCreator from './TaskCreator';
 import { Empty } from 'antd';
-import TaskToolBar from './TaskToolBar';
 
 // 导出TaskType类型，给TaskDetail用
 export type TaskType = {
@@ -164,9 +163,8 @@ export default function TaskList(props: IProps) {
           // 遍历任务列表
           tasks.map((item) => (
             <TaskItem
+              task={item}
               key={item.title}
-              title={item.title}
-              endTime={item.endTime}
               // 若被选中则处于激活状态，弹出抽屉(Drawer)
               active={activeTaskKey === item.taskID}
               onMore={() => setActiveTaskKey(item.taskID)}

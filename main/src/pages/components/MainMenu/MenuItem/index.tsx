@@ -10,7 +10,7 @@ interface IProps {
   name: string    // 任务名称
   count: number   // 计数器
   active: boolean // 是否处于激活（选中）状态
-  icon?: () => ReactNode   // 图标
+  icon?: (active: boolean) => ReactNode   // 图标
   onClick: () => void
 }
 
@@ -19,7 +19,7 @@ export default function MenuItem(props: IProps) {
 
   return (
     <button className={`menu-item ${active ? 'menu-item-active' : ''}`} onClick={onClick}>
-      {icon?.()}
+      {icon?.(active)}
       <span className='menu-item-name'>{name}</span>
       {/* 显示任务数量 */}
       {

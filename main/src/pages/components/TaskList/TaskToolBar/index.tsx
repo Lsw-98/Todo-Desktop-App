@@ -1,6 +1,5 @@
 import { CalendarIcon, ListIcon } from '@/components/Icon'
 import { VIEW_MODE } from '@/const'
-import { Calendar } from 'antd'
 import { useState } from 'react'
 import './index.less'
 
