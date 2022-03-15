@@ -21,7 +21,10 @@ export default function MenuItem(props: IProps) {
     <button className={`menu-item ${active ? 'menu-item-active' : ''}`} onClick={onClick}>
       {icon?.()}
       <span className='menu-item-name'>{name}</span>
-      <span className='menu-item-count'>{count}</span>
+      {/* 显示任务数量 */}
+      {
+        name !== "日历" && <span className='menu-item-count'>{count}</span>
+      }
     </button>
   );
 }

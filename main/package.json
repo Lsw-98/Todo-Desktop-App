@@ -25,6 +25,7 @@
     "moment": "^2.29.1",
     "react": "17.x",
     "react-dom": "17.x",
+    "tui-calendar": "^1.15.3",
     "umi": "^3.5.21"
   },
   "devDependencies": {

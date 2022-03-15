@@ -14,4 +14,11 @@ export const TASK_STATUS = {
 export const MENU_KEY = {
   DOING: 0,
   DONE: 1,
+  CALENDAR: 2
+}
+
+// 任务栏菜单项
+export const VIEW_MODE = {
+  LIST: 0,
+  CALENDAR: 1,
 }

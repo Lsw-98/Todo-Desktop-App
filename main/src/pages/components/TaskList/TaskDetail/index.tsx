@@ -54,16 +54,18 @@ export default function TaskDetail(props: IProps) {
   * values: 表单提交对象
   */
   const handleSubmit = (values: any) => {
-    // console.log(values);
-
-    onSubmit?.({
-      taskID: task?.taskID || '',
-      desc: values.desc || task?.desc,
-      title: realTitle,
-      endTime: values.endTime || task?.endTime
-    })
-    onClose()
-
+    if (task) {
+      onSubmit?.({
+        taskID: task.taskID || '',
+        desc: values.desc || task.desc,
+        title: realTitle,
+        endTime: values.endTime || task.endTime,
+        finishTime: task.finishTime || '',
+        startTime: task.startTime,
+        status: task.status
+      })
+      onClose()
+    }
   };
 
   return (

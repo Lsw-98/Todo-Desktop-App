@@ -1,0 +1,26 @@
+.task-tool-bar{
+  padding: 10px;
+  &-content{
+    display: flex;
+    border-radius: 4px;
+    flex: 1;
+    background-color: rgb(222, 234, 246);
+    box-shadow: rgb(190, 203, 216) 4px 4px 8px 0px,
+      rgb(243, 249, 255) -4px -4px 8px 0px;
+    padding: 10px 10px;
+    justify-content: flex-end;
+  }
+  &-calendar, &-list{
+    align-self: flex-end;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    width: 20px;
+    transition: all 0.2s;
+    margin-left: 15px;
+    &:hover{
+      // 实现放大效果
+      transform: scale(1.3);
+    }
+  }
+}

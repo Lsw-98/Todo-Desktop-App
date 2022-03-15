@@ -4,15 +4,16 @@
 
 import './index.less'
 import TaskItem from './TaskItem';
-import { message } from 'antd'
+import { Calendar, message } from 'antd'
 import { useEffect, useMemo, useState } from 'react'
 import moment from 'moment'
 import TaskDetail from './TaskDetail';
 import apiConfig from '@/api/config';
 import { api, getApi, postApi } from '@/api';
-import { API_RESULT, MENU_KEY, TASK_STATUS } from '@/const';
+import { API_RESULT, MENU_KEY, TASK_STATUS, VIEW_MODE } from '@/const';
 import TaskCreator from './TaskCreator';
 import { Empty } from 'antd';
+import TaskToolBar from './TaskToolBar';
 
 // 导出TaskType类型，给TaskDetail用
 export type TaskType = {
@@ -59,7 +60,8 @@ export default function TaskList(props: IProps) {
         const LastestList = res.data.map((item: TaskType) => {
           // 用moment格式覆盖字符串格式的endTime
           return Object.assign(item, {
-            endTime: moment(item.endTime)
+            endTime: moment(item.endTime),
+            startTime: moment(item.startTime)
           })
         })
         setTasks(LastestList)
@@ -70,7 +72,6 @@ export default function TaskList(props: IProps) {
       console.log(err);
     })
   }
-
 
   /*
   * 被选中的任务
@@ -107,7 +108,6 @@ export default function TaskList(props: IProps) {
     const finishTask = tasks.find(item => item.taskID === taskID)
     handleModify(Object.assign({}, finishTask, {
       status: activeKey === MENU_KEY.DOING ? TASK_STATUS.DONE : TASK_STATUS.DOING,
-      type: activeKey,
       finishTime: activeKey === MENU_KEY.DOING ? moment() : ''
     }))
     getLastestList()
@@ -118,7 +118,10 @@ export default function TaskList(props: IProps) {
   * values：任务信息
   */
   const handleModify = (values: TaskType) => {
-    postApi(apiConfig.update.url, values).then(res => {
+    postApi(apiConfig.update.url, {
+      ...values,
+      type: activeKey,
+    }).then(res => {
       if (res.code === API_RESULT.SUCCESS) {
         message.success("修改成功！")
         // 拿到修改后最新的列表
@@ -153,6 +156,7 @@ export default function TaskList(props: IProps) {
   return (
     <div className='task-list'>
       {
+        // 默认激活进行中的任务
         activeKey === MENU_KEY.DOING && <TaskCreator onCreate={handleCreate} />
       }
       <div className='task-item-container'>

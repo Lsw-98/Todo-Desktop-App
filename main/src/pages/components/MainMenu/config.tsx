@@ -1,7 +1,13 @@
-import { DoingIcon, DoneIcon } from "@/components/Icon"
+import { CalendarIcon, DoingIcon, DoneIcon } from "@/components/Icon"
 import { MENU_KEY } from "@/const"
 
 const config = [
+  {
+    name: "日历",
+    key: MENU_KEY.CALENDAR,
+    apiKey: '',
+    icon: () => <CalendarIcon />,
+  },
   {
     name: "进行中",
     key: MENU_KEY.DOING,
