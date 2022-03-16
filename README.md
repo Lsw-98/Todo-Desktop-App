@@ -325,3 +325,26 @@ console.log(targetObj1)   // { a: 4 }
 3. 在TaskList中使用useEffect，将activeKey当作useEffect的依赖项，当activeKey变化时，才会触发useEffect中的函数；
 
 其实这里只是一个简单的父子组件通信过程，但是将状态提升到父组件这种思想先开始并没有考虑到，在两个组件的公共父组件中管理状态比较方便，省去了很多不必要的操作。
+
+# 知识点：useRef()
+useRef可以在函数式组件中存储/查找组件内的标签或任意其他数据。useRef可以**获取某些组件挂在完成或重新渲染完成之后才拥有的某些对象的引用，且保证该引用在组件整个生命周期内固定不变**，可以准确找到我们要找的对象。
+useRef返回一个ref对象的可变引用，不仅可以存储DOM引用，还可以再任意js值中。修改useRef值的唯一方法是修改其current的值，且值的变更不会引起re-render。每一次组件render时useRef都返回固定不变的值。
+
+# 知识点：Object.entries
+Object.entries()方法返回一个给定对象自身可枚举属性的键值对数组，其排列与使用 for...in 循环遍历该对象时返回的顺序一致（区别在于 for-in 循环还会枚举原型链中的属性）。例如：
+```js
+const object1 = {
+  a: '已完成的任务',
+  b: 42
+};
+
+for (const [key, value] of Object.entries(object1)) {
+  console.log(`${key}: ${value}`);
+}
+
+// 输出
+// "a: 已完成的任务"
+// "b: 42"
+```
+
+将可遍历对象以数组形式返回，每个数组对象为key-value组合的字符串

@@ -14,7 +14,8 @@ export const TASK_STATUS = {
 export const MENU_KEY = {
   DOING: 0,
   DONE: 1,
-  CALENDAR: 2
+  CALENDAR: 2,
+  STATISTICS: 3,
 }
 
 // 任务栏菜单项

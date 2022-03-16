@@ -1,4 +1,4 @@
-import { CalendarIcon, DoingIcon, DoneIcon } from "@/components/Icon"
+import { CalendarIcon, DataIcon, DoingIcon, DoneIcon } from "@/components/Icon"
 import { MENU_KEY } from "@/const"
 
 const config = [
@@ -20,6 +20,12 @@ const config = [
     key: MENU_KEY.DONE,
     apiKey: 'done',
     icon: (active: boolean) => <DoneIcon active={active} />,
+  },
+  {
+    name: "任务统计",
+    key: MENU_KEY.STATISTICS,
+    apiKey: '',
+    icon: (active: boolean) => <DataIcon active={active} />,
   },
 ]
 

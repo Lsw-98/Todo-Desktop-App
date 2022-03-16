@@ -23,7 +23,7 @@ export default function MenuItem(props: IProps) {
       <span className='menu-item-name'>{name}</span>
       {/* 显示任务数量 */}
       {
-        name !== "日历" && <span className='menu-item-count'>{count}</span>
+        count > 0 && <span className='menu-item-count'>{count}</span>
       }
     </button>
   );
