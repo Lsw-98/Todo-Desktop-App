@@ -4,6 +4,10 @@ export const getChart = (data: { name: string, value: number }[]) => {
     tooltip: {
       trigger: 'item'
     },
+    legend: {
+      top: '1%',
+      left: 'right'
+    },
     series: [
       {
         name: '任务完成比',

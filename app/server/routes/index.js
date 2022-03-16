@@ -142,10 +142,6 @@ router.post('/update', function (req, res, next) {
       const targetTask = data.find(item => (
         item.taskID === taskID
       ))
-      console.log(data);
-      console.log(taskID);
-      console.log(targetTask, "targettask");
-      console.log(task, "task");
       if (targetTask.status === task.status) {
         Object.assign(targetTask, task)
         return data
