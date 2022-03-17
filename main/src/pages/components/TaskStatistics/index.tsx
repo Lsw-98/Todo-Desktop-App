@@ -34,15 +34,17 @@ export default function TaskStatistics(props: IProps) {
   const LAYOUT_LOCAL_KEY = "todo-layout"
 
   const { countResult } = props
-  // tasks：创建的任务
+  // todayFinishT：今天需要完成的任务
   const [todayFinishT, setTodayFinishT] = useState<TaskType[]>([])
+  // otherFinishT：今天之后需要完成的任务
+  const [otherFinishT, setOtherFinishT] = useState<TaskType[]>([])
   // 设置布局记忆
   const [layout, setLayout] = useState<GridLayout.Layout[]>(getLocal(LAYOUT_LOCAL_KEY, DEFAULT_LAYOUT))
 
   // 今天剩余任务量
   const todayTask = useMemo(() => {
-    return countResult?.doing || 0
-  }, [countResult])
+    return otherFinishT.length
+  }, [otherFinishT])
 
   // 今天完成任务量
   const todayFinishTask = useMemo(() => {
@@ -84,14 +86,15 @@ export default function TaskStatistics(props: IProps) {
       // 传给echarts
       chartRef.current.setOption(options)
 
-      getLastestList()
+      getLastestList(MENU_KEY.DONE)
+      getLastestList(MENU_KEY.DOING)
     }
   }, [countResult])
 
   // 得到最新的任务列表
-  const getLastestList = () => {
+  const getLastestList = (count: number) => {
     getApi(apiConfig.list.url, {
-      type: MENU_KEY.DONE
+      type: count
     }).then(res => {
       // 如果请求成功
       if (res.code === API_RESULT.SUCCESS) {
@@ -106,12 +109,20 @@ export default function TaskStatistics(props: IProps) {
 
         // 得到今天的日期
         const today = moment().format("YYYY-MM-DD")
+        if (count === 1) {
+          // 得到今天完成的任务
+          const todayTask = LastestList.filter((item: TaskType) => {
+            return moment(item.finishTime, "YYYY-MM-DD").isSame(today)
+          })
+          setTodayFinishT(todayTask)
 
-        // 得到今天完成的任务
-        const todayTask = LastestList.filter((item: TaskType) => {
-          return moment(item.finishTime, "YYYY-MM-DD").isSame(today)
-        })
-        setTodayFinishT(todayTask)
+        } else {
+          // 得到今天和今天之前的任务
+          const otherTask = LastestList.filter((item: TaskType) => {
+            return moment(item.startTime, "YYYY-MM-DD").isSameOrBefore(today)
+          })
+          setOtherFinishT(otherTask)
+        }
       } else {
         // 请求失败
       }
@@ -181,9 +192,9 @@ export default function TaskStatistics(props: IProps) {
       <GridLayout
         className="layout"
         layout={layout}
-        cols={12}
+        cols={15}
         rowHeight={40}
-        width={1200}
+        width={1500}
         onLayoutChange={handleLayoutChange}
       >
         {renderCard()}

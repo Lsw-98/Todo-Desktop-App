@@ -61,7 +61,7 @@ export default function TaskDetail(props: IProps) {
         title: realTitle,
         endTime: values.endTime || task.endTime,
         finishTime: task.finishTime || '',
-        startTime: task.startTime,
+        startTime: values.startTime || task.startTime,
         status: task.status
       })
       onClose()
@@ -87,7 +87,15 @@ export default function TaskDetail(props: IProps) {
         initialValues={task}
       >
         <div className='form-item-container'>
-          <div className='form-item-icon'>日期：</div>
+          <div className='form-item-icon'>开始日期：</div>
+          <div className='form-item-component'>
+            <Form.Item name="startTime">
+              <QuickDateFormat />
+            </Form.Item>
+          </div>
+        </div>
+        <div className='form-item-container'>
+          <div className='form-item-icon'>截止日期：</div>
           <div className='form-item-component'>
             <Form.Item name="endTime">
               <QuickDateFormat />
