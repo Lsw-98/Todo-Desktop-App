@@ -2,6 +2,8 @@
  * 任务统计组件
  */
 
+// @ts-nocheck
+import GridLayout from "react-grid-layout";
 import './index.less'
 import * as echarts from 'echarts'
 import { useEffect, useMemo, useRef, useState } from 'react'
@@ -12,16 +14,30 @@ import { getApi } from '@/api'
 import { API_RESULT, MENU_KEY } from '@/const'
 import { TaskType } from '../TaskList'
 import moment from 'moment'
-import CardContainer from '@/components/CardContainer'
+import 'react-grid-layout/css/styles.css'
+import 'react-resizable/css/styles.css'
+import { getLocal, saveLocal } from '@/utils'
 
 interface IProps {
   countResult: Record<string, number>
 }
 
 export default function TaskStatistics(props: IProps) {
+  // 每个卡片的属性
+  const DEFAULT_LAYOUT = [
+    { i: "chart", x: 0, y: 0, w: 3, h: 6 },
+    { i: "todayTask", x: 1, y: 0, w: 2, h: 3 },
+    { i: "todayFinishTask", x: 4, y: 0, w: 2, h: 4 },
+    { i: "finishTask", x: 4, y: 0, w: 3, h: 3 }
+  ];
+
+  const LAYOUT_LOCAL_KEY = "todo-layout"
+
   const { countResult } = props
   // tasks：创建的任务
   const [todayFinishT, setTodayFinishT] = useState<TaskType[]>([])
+  // 设置布局记忆
+  const [layout, setLayout] = useState<GridLayout.Layout[]>(getLocal(LAYOUT_LOCAL_KEY, DEFAULT_LAYOUT))
 
   // 今天剩余任务量
   const todayTask = useMemo(() => {
@@ -104,27 +120,74 @@ export default function TaskStatistics(props: IProps) {
     })
   }
 
+  const renderCard = () => {
+    // 配置卡片
+    const cards = [
+      {
+        theme: "",
+        title: "任务统计",
+        key: "chart",
+        content: () => (
+          <div id='task-chart' className='charts'></div>
+        )
+      },
+      {
+        theme: "orange",
+        title: "今日剩余任务",
+        key: "todayTask",
+        content: () => (
+          <div className='card-container'>
+            <Statistic title="今日剩余任务" value={todayTask} />
+          </div>
+        )
+      },
+      {
+        theme: "wheat",
+        title: "今日已完成任务量",
+        key: "todayFinishTask",
+        content: () => (
+          <div className='card-container'>
+            <Statistic title="今日已完成任务量" value={todayFinishTask} />
+          </div>
+        )
+      },
+      {
+        theme: "puple",
+        title: "累计已完成任务量",
+        key: "finishTask",
+        content: () => (
+          <div className='card-container'>
+            <Statistic title="累计已完成任务量" value={finishTask} />
+          </div>
+        )
+      },
+    ]
+    // 遍历卡片加载
+    return cards.map(item => (
+      <div className={`card card-theme-${item.theme}`} key={item.key} >
+        {
+          item.content()
+        }
+      </div>
+    ))
+  }
+
+  const handleLayoutChange = (value: GridLayout.Layout[]) => {
+    saveLocal(LAYOUT_LOCAL_KEY, value)
+  }
+
   return (
     <div className='cards'>
-      <CardContainer title='任务统计'>
-        <div id='task-chart' className='charts'></div>
-      </CardContainer>
-
-      <CardContainer theme='orange' height={140}>
-        <div className='card-container'>
-          <Statistic title="今日剩余任务" value={todayTask} />
-        </div>
-      </CardContainer>
-      <CardContainer theme='wheat' height={140}>
-        <div className='card-container'>
-          <Statistic title="今日已完成任务量" value={todayFinishTask} />
-        </div>
-      </CardContainer>
-      <CardContainer theme='puple' height={140}>
-        <div className='card-container'>
-          <Statistic title="累计完成任务量" value={finishTask} />
-        </div>
-      </CardContainer>
+      <GridLayout
+        className="layout"
+        layout={layout}
+        cols={12}
+        rowHeight={40}
+        width={1200}
+        onLayoutChange={handleLayoutChange}
+      >
+        {renderCard()}
+      </GridLayout>
     </div>
   )
 }

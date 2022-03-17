@@ -348,3 +348,7 @@ for (const [key, value] of Object.entries(object1)) {
 ```
 
 将可遍历对象以数组形式返回，每个数组对象为key-value组合的字符串
+
+# 项目难点：记忆布局
+在任务统计页面设计了几个小卡片，方便清晰的展示任务，这些小卡片使用"react-grid-layout"库进行包裹，实现了自由拖动的效果，但是每次刷新页面都不能记住上次拖动的位置，所以这里实现了记忆上次拖动后的布局位置功能。  
+这里的想法是运用localstorage。首先初始化一个layout状态用来存储拖动后的GridLayout属性，然后使用localStorage.setItem方法将新的layout状态储存起来。在首次进入到页面时调用localStorage.getItem方法，如果没有layout，则使用初始化的layout，若有layout，则使用localStorage中的layout。

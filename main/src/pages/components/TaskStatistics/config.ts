@@ -6,7 +6,7 @@ export const getChart = (data: { name: string, value: number }[]) => {
     },
     legend: {
       top: '1%',
-      left: 'right'
+      left: 'center'
     },
     series: [
       {
