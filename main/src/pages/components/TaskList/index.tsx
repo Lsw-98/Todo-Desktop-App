@@ -7,10 +7,9 @@ import TaskItem from './TaskItem';
 import { message } from 'antd'
 import { useEffect, useMemo, useState } from 'react'
 import moment from 'moment'
-import TaskDetail from './TaskDetail';
 import apiConfig from '@/api/config';
-import { api, getApi, postApi } from '@/api';
-import { API_RESULT, MENU_KEY, TASK_STATUS, VIEW_MODE } from '@/const';
+import { getApi, postApi } from '@/api';
+import { API_RESULT, MENU_KEY, TASK_STATUS } from '@/const';
 import TaskCreator from './TaskCreator';
 import { Empty } from 'antd';
 
@@ -71,13 +70,6 @@ export default function TaskList(props: IProps) {
       console.log(err);
     })
   }
-
-  /*
-  * 被选中的任务
-  */
-  const activeTask = useMemo(() => {
-    return tasks.find(item => item.taskID === activeTaskKey)
-  }, [tasks, activeTaskKey])
 
   /*
   * 关闭抽屉
@@ -170,6 +162,7 @@ export default function TaskList(props: IProps) {
               onMore={() => setActiveTaskKey(item.taskID)}
               onFinish={() => handleFinish(item.taskID)}
               onRemove={() => handleDel(item.taskID)}
+              onSubmit={handleModify}
             />
           ))
         }
@@ -187,11 +180,6 @@ export default function TaskList(props: IProps) {
           )
         }
       </div>
-      <TaskDetail
-        task={activeTask}
-        onClose={onClose}
-        onSubmit={handleModify}
-      />
     </div>
   );
 }

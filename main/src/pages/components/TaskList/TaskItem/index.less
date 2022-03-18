@@ -1,14 +1,48 @@
 .task-item{
   position: relative;
-  height: 80px;
   padding: 10px;
   box-shadow: 5px 5px 10px #d1d1d1, -5px -5px 10px #ffffff;
   border-radius: 4px;
   align-items: center;
   display: flex;
+  flex-direction: column;
   transition: all 0.4s;
   cursor: pointer;
   background: #fcfcfc;
+
+  &-main{
+    display: flex;
+    width: 100%;
+    border-bottom: 1px solid #e2e2e2;
+    padding-bottom: 10px;
+  }
+
+  &-detail{
+    display: flex;
+    width: 100%;
+    padding-top: 10px;
+  }
+
+  &-editor{
+    display: flex;
+    width: 100%;
+    padding-top: 10px;
+    form{
+      flex: 1;
+    }
+    .form-item{
+      &-container{
+        display: flex;
+      }
+    
+      &-icon{
+        width: 70px;
+      }
+      &-component{
+        flex: 1;
+      }
+    }
+  }
 
   &:hover{
     box-shadow: 0 0 2px 2px #c7c5c5ad;
@@ -16,12 +50,7 @@
 
   &-active{
     background: rgb(239, 241, 252);
-  }
-
-  &-date{
-    display: flex;
-    align-items: center;
-  }
+  }  
 
   &-info{
     display: flex;
@@ -39,9 +68,6 @@
   &-title{
     margin-bottom: 10px;
     font-size: 15px;
-    // &-timeout{
-    //   color: #fc4f57;
-    // }
   }
 
   &-timeouttask{
@@ -50,9 +76,38 @@
 
   &-desc{
     color: #7e7e7e;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    padding: 0 4px;
+    label{
+      margin-right: 4px;
+    }
+  }
+
+  &-starttime{
+    background: aliceblue;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #594ff7;
+    width: 120px;
+    margin-bottom: 2px;
+    margin-right: 4px;
   }
 
   &-endtime{
+    background: aliceblue;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #594ff7;
+    width: 120px;
+    margin-bottom: 2px;
+    margin-right: 4px;
+  }
+
+  &-finishtime{
     background: aliceblue;
     padding: 2px 6px;
     border-radius: 4px;
@@ -75,24 +130,27 @@
 
   &-status{
     display: flex;
-    flex-direction: column;
-    width: 70px;
+    flex-direction: column;    
   }
 
   &-finish{
-    border: none;
-    background: #3a77ff;
-    color: white;
-    border-radius: 2px;
-    cursor: pointer;
     margin-bottom: 10px;
   }
-
-  &-del{
-    border: none;
-    background: #3a77ff;
-    color: white;
-    border-radius: 2px;
-    cursor: pointer;
+  
+  &-update{
+    margin-left: auto;
   }
+
+  &-del{    
+    background: #f54343;    
+  }
+}
+
+.btns{
+  background: #3a77ff;
+  border: none;
+  color: white;
+  border-radius: var(--radius);
+  cursor: pointer;
+  width: 70px;
 }

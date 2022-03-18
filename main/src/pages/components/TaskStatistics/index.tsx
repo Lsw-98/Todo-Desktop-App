@@ -109,6 +109,7 @@ export default function TaskStatistics(props: IProps) {
 
         // 得到今天的日期
         const today = moment().format("YYYY-MM-DD")
+
         if (count === 1) {
           // 得到今天完成的任务
           const todayTask = LastestList.filter((item: TaskType) => {
