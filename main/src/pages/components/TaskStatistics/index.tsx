@@ -7,7 +7,7 @@ import GridLayout from "react-grid-layout";
 import './index.less'
 import * as echarts from 'echarts'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { getChart } from './config'
+import { getChart, getProgress } from './config'
 import { Statistic } from 'antd'
 import apiConfig from '@/api/config'
 import { getApi } from '@/api'
@@ -28,7 +28,8 @@ export default function TaskStatistics(props: IProps) {
     { i: "chart", x: 0, y: 0, w: 3, h: 6 },
     { i: "todayTask", x: 1, y: 0, w: 2, h: 3 },
     { i: "todayFinishTask", x: 4, y: 0, w: 2, h: 4 },
-    { i: "finishTask", x: 4, y: 0, w: 3, h: 3 }
+    { i: "finishTask", x: 4, y: 0, w: 3, h: 3 },
+    { i: "progress", x: 4, y: 0, w: 3, h: 3 },
   ];
 
   const LAYOUT_LOCAL_KEY = "todo-layout"
@@ -56,20 +57,27 @@ export default function TaskStatistics(props: IProps) {
     return countResult?.done || 0
   }, [countResult])
 
-  const chartRef = useRef<echarts.EChartsType>()
+  const chartRefs = useRef<Record<string, echarts.EChartsType>>({})
 
   // 初次渲染完成后加载echarts
   useEffect(() => {
-    const dom = document.getElementById('task-chart')
-    if (dom) {
-      const myChart = echarts.init(dom)
-      chartRef.current = myChart
-    }
+    const ids = ['task-chart', 'task-progress']
+    ids.forEach(item => {
+      const dom = document.getElementById(item)
+
+      if (dom && chartRefs.current) {
+
+        chartRefs.current[item] = echarts.init(dom)
+      }
+    })
   }, [])
 
   // 每当有任务数量发生变化时，重新加载echarts
   useEffect(() => {
-    if (chartRef.current) {
+    getLastestList(MENU_KEY.DONE)
+    getLastestList(MENU_KEY.DOING)
+    if (chartRefs.current?.['task-chart']) {
+      const chartObj = chartRefs.current['task-chart']
       const dataSource = [
         {
           name: "进行中任务",
@@ -82,12 +90,15 @@ export default function TaskStatistics(props: IProps) {
           value: countResult.done,
         },
       ]
-      const options = getChart(dataSource)
+      const option = getChart(dataSource)
       // 传给echarts
-      chartRef.current.setOption(options)
+      chartObj.setOption(option)
+    }
 
-      getLastestList(MENU_KEY.DONE)
-      getLastestList(MENU_KEY.DOING)
+    if (chartRefs.current?.['task-progress'] && todayFinishTask !== undefined && todayTask !== undefined) {
+      const chartObj = chartRefs.current['task-progress']
+      const option = getProgress((todayFinishTask / (todayFinishTask + todayTask)) * 100)
+      chartObj.setOption(option)
     }
   }, [countResult])
 
@@ -137,15 +148,23 @@ export default function TaskStatistics(props: IProps) {
     const cards = [
       {
         theme: "",
-        title: "任务统计",
+        title: "任务完成比",
         key: "chart",
         content: () => (
           <div id='task-chart' className='charts'></div>
         )
       },
       {
+        theme: "",
+        title: "任务进度",
+        key: "progress",
+        content: () => (
+          <div id='task-progress' className='charts'></div>
+        )
+      },
+      {
         theme: "orange",
-        title: "今日剩余任务",
+        title: "",
         key: "todayTask",
         content: () => (
           <div className='card-container'>
@@ -155,7 +174,7 @@ export default function TaskStatistics(props: IProps) {
       },
       {
         theme: "wheat",
-        title: "今日已完成任务量",
+        title: "",
         key: "todayFinishTask",
         content: () => (
           <div className='card-container'>
@@ -165,7 +184,7 @@ export default function TaskStatistics(props: IProps) {
       },
       {
         theme: "puple",
-        title: "累计已完成任务量",
+        title: "",
         key: "finishTask",
         content: () => (
           <div className='card-container'>
@@ -176,7 +195,9 @@ export default function TaskStatistics(props: IProps) {
     ]
     // 遍历卡片加载
     return cards.map(item => (
+
       <div className={`card card-theme-${item.theme}`} key={item.key} >
+        <div className="card-container-title">{item.title}</div>
         {
           item.content()
         }
