@@ -79,3 +79,18 @@ export const DataIcon = (props: IProps) => {
     </svg>
   )
 }
+
+// 排序图标
+export const SortIcon = (props: IProps) => {
+  const { active = false } = props
+  const color = active ? '#FFF' : '#2261e4'
+  return (
+    <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="48" height="48" fill="white" fillOpacity="0.01" />
+      <path d="M19 6L19 42" stroke={color} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M7 17.8995L19 5.89949" stroke={color} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M29 42.1005L29 6.10051" stroke={color} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M29 42.1005L41 30.1005" stroke={color} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  )
+}

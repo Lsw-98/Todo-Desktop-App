@@ -27,15 +27,29 @@ export type TaskType = {
 interface IProps {
   activeKey: number
   onCountChange?: () => void
+  sort: string
 }
 
 export default function TaskList(props: IProps) {
   // 存当前激活的是哪个菜单项，以便展示对应菜单项的内容
-  const { activeKey, onCountChange } = props
+  const { activeKey, onCountChange, sort } = props
   // tasks：创建的任务
   const [tasks, setTasks] = useState<TaskType[]>([])
   // activeTask：创建后的任务是否被选中
   const [activeTaskKey, setActiveTaskKey] = useState('')
+
+  // 任务排序，当sort变化时，重新排序
+  const sortTasks = useMemo<TaskType[]>(() => {
+    return [...tasks].sort((a: TaskType, b: TaskType) => {
+      if (sort === "sort-start") {
+        return a.startTime.diff(b.startTime)
+      } else if (sort === "sort-end") {
+        return a.endTime.diff(b.endTime)
+      } else {
+        return 0
+      }
+    })
+  }, [tasks, sort])
 
   // 当菜单项点击发生变化时，更新task列表内容
   useEffect(() => {
@@ -153,7 +167,7 @@ export default function TaskList(props: IProps) {
       <div className='task-item-container'>
         {
           // 遍历任务列表
-          tasks.map((item) => (
+          sortTasks.map((item) => (
             <TaskItem
               task={item}
               key={item.title}
