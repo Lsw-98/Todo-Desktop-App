@@ -12,6 +12,8 @@ import { getApi, postApi } from '@/api';
 import { API_RESULT, MENU_KEY, TASK_STATUS } from '@/const';
 import TaskCreator from './TaskCreator';
 import { Empty } from 'antd';
+import TaskToolBar from './TaskToolBar';
+import { getLocal, saveLocal } from '@/utils';
 
 // 导出TaskType类型，给TaskDetail用
 export type TaskType = {
@@ -26,17 +28,22 @@ export type TaskType = {
 
 interface IProps {
   activeKey: number
-  onCountChange?: () => void
-  sort: string
+  onCountChange: () => void
 }
+
+const SORT_LOCAL_KEY = "todo-sort"
 
 export default function TaskList(props: IProps) {
   // 存当前激活的是哪个菜单项，以便展示对应菜单项的内容
-  const { activeKey, onCountChange, sort } = props
+  const { activeKey, onCountChange } = props
   // tasks：创建的任务
   const [tasks, setTasks] = useState<TaskType[]>([])
   // activeTask：创建后的任务是否被选中
   const [activeTaskKey, setActiveTaskKey] = useState('')
+  // 排序方式，默认为按开始时间排序
+  const [sort, setSort] = useState(getLocal(SORT_LOCAL_KEY, 'sort-start'))
+  // 过滤任务，在搜索框输入文字后过滤掉不含输入文字的任务
+  const [filter, setFilter] = useState('')
 
   // 任务排序，当sort变化时，重新排序
   const sortTasks = useMemo<TaskType[]>(() => {
@@ -50,6 +57,19 @@ export default function TaskList(props: IProps) {
       }
     })
   }, [tasks, sort])
+
+  // 过滤任务
+  const filteredTasks = useMemo<TaskType[]>(() => {
+    // 如果filter有值(输入框输入了内容)，则过滤
+    if (filter) {
+      return sortTasks.filter(item => (
+        item.title.includes(filter)
+      ))
+      // 否则返回原任务列表(输入框为空)
+    } else {
+      return sortTasks
+    }
+  }, [sortTasks, filter])
 
   // 当菜单项点击发生变化时，更新task列表内容
   useEffect(() => {
@@ -159,41 +179,53 @@ export default function TaskList(props: IProps) {
   }
 
   return (
-    <div className='task-list'>
-      {
-        // 默认激活进行中的任务
-        activeKey === MENU_KEY.DOING && <TaskCreator onCreate={handleCreate} />
-      }
-      <div className='task-item-container'>
+    <>
+      <TaskToolBar
+        tasks={sortTasks}
+        onClick={(key) => {
+          setSort(key)
+          saveLocal(SORT_LOCAL_KEY, key)
+        }}
+        onSearch={(content) => {
+          setFilter(content)
+        }}
+      />
+      <div className='task-list'>
         {
-          // 遍历任务列表
-          sortTasks.map((item) => (
-            <TaskItem
-              task={item}
-              key={item.title}
-              // 若被选中则处于激活状态，弹出抽屉(Drawer)
-              active={activeTaskKey === item.taskID}
-              onMore={() => setActiveTaskKey(item.taskID)}
-              onFinish={() => handleFinish(item.taskID)}
-              onRemove={() => handleDel(item.taskID)}
-              onSubmit={handleModify}
-            />
-          ))
+          // 默认激活进行中的任务
+          activeKey === MENU_KEY.DOING && <TaskCreator onCreate={handleCreate} />
         }
-        {
-          !tasks.length &&
-          (
-            <Empty
-              image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
-              description={
-                <span>
-                  暂无任务
-                </span>
-              }
-            ></Empty>
-          )
-        }
+        <div className='task-item-container'>
+          {
+            // 遍历任务列表
+            filteredTasks.map((item) => (
+              <TaskItem
+                task={item}
+                key={item.title}
+                // 若被选中则处于激活状态，弹出抽屉(Drawer)
+                active={activeTaskKey === item.taskID}
+                onMore={() => setActiveTaskKey(item.taskID)}
+                onFinish={() => handleFinish(item.taskID)}
+                onRemove={() => handleDel(item.taskID)}
+                onSubmit={handleModify}
+              />
+            ))
+          }
+          {
+            !tasks.length &&
+            (
+              <Empty
+                image="https://gw.alipayobjects.com/zos/antfincdn/ZHrcdLPrvN/empty.svg"
+                description={
+                  <span>
+                    暂无任务
+                  </span>
+                }
+              ></Empty>
+            )
+          }
+        </div>
       </div>
-    </div>
+    </>
   );
 }
