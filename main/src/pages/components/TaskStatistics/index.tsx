@@ -8,7 +8,6 @@ import './index.less'
 import * as echarts from 'echarts'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { getChart, getProgress } from './config'
-import { Statistic } from 'antd'
 import apiConfig from '@/api/config'
 import { getApi } from '@/api'
 import { API_RESULT, MENU_KEY } from '@/const'
@@ -30,6 +29,7 @@ export default function TaskStatistics(props: IProps) {
     { i: "todayFinishTask", x: 4, y: 0, w: 2, h: 4 },
     { i: "finishTask", x: 4, y: 0, w: 3, h: 3 },
     { i: "progress", x: 4, y: 0, w: 3, h: 3 },
+    { i: "outTimeTask", x: 4, y: 0, w: 3, h: 3 },
   ];
 
   const LAYOUT_LOCAL_KEY = "todo-layout"
@@ -39,6 +39,8 @@ export default function TaskStatistics(props: IProps) {
   const [todayFinishT, setTodayFinishT] = useState<TaskType[]>([])
   // otherFinishT：今天之后需要完成的任务
   const [otherFinishT, setOtherFinishT] = useState<TaskType[]>([])
+  // outTimeT：已截止的任务
+  const [outTimeT, setOoutTimeT] = useState<TaskType[]>([])
   // 设置布局记忆
   const [layout, setLayout] = useState<GridLayout.Layout[]>(getLocal(LAYOUT_LOCAL_KEY, DEFAULT_LAYOUT))
 
@@ -56,6 +58,11 @@ export default function TaskStatistics(props: IProps) {
   const finishTask = useMemo(() => {
     return countResult?.done || 0
   }, [countResult])
+
+  // 已截止的任务
+  const outTimeTask = useMemo(() => {
+    return outTimeT.length
+  }, [outTimeT])
 
   const chartRefs = useRef<Record<string, echarts.EChartsType>>({})
 
@@ -97,7 +104,8 @@ export default function TaskStatistics(props: IProps) {
 
     if (chartRefs.current?.['task-progress'] && todayFinishTask !== undefined && todayTask !== undefined) {
       const chartObj = chartRefs.current['task-progress']
-      const option = getProgress((todayFinishTask / (todayFinishTask + todayTask)) * 100)
+      const percentage = (todayFinishTask / (todayFinishTask + todayTask)) * 100
+      const option = getProgress(isNaN(percentage) ? 0 : percentage)
       chartObj.setOption(option)
     }
   }, [countResult])
@@ -120,6 +128,12 @@ export default function TaskStatistics(props: IProps) {
 
         // 得到今天的日期
         const today = moment().format("YYYY-MM-DD")
+
+        // 得到已截止的任务
+        const outTimeTask = LastestList.filter((item: TaskType) => {
+          return moment(item.endTime, "YYYY-MM-DD").isBefore(today)
+        })
+        setOoutTimeT(outTimeTask)
 
         if (count === 1) {
           // 得到今天完成的任务
@@ -164,31 +178,42 @@ export default function TaskStatistics(props: IProps) {
       },
       {
         theme: "orange",
-        title: "",
+        title: "今日剩余任务",
         key: "todayTask",
         content: () => (
           <div className='card-container'>
-            <Statistic title="今日剩余任务" value={todayTask} />
+            {todayTask}
+            {/* <Statistic title="今日剩余任务" value= /> */}
           </div>
         )
       },
       {
         theme: "wheat",
-        title: "",
+        title: "今日已完成任务量",
         key: "todayFinishTask",
         content: () => (
           <div className='card-container'>
-            <Statistic title="今日已完成任务量" value={todayFinishTask} />
+            {todayFinishTask}
           </div>
         )
       },
       {
         theme: "puple",
-        title: "",
+        title: "累计已完成任务量",
         key: "finishTask",
         content: () => (
           <div className='card-container'>
-            <Statistic title="累计已完成任务量" value={finishTask} />
+            {finishTask}
+          </div>
+        )
+      },
+      {
+        theme: "puple",
+        title: "已截止的任务",
+        key: "outTimeTask",
+        content: () => (
+          <div className='card-container'>
+            {outTimeTask}
           </div>
         )
       },
