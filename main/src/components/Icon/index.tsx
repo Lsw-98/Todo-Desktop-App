@@ -94,3 +94,23 @@ export const SortIcon = (props: IProps) => {
     </svg>
   )
 }
+
+// 卡片配置图标
+export const CardIcon = (props: IProps) => {
+  const { active = false } = props
+  const color = active ? '#FFF' : '#2261e4'
+  return (
+    <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect width="48" height="48" fill="white" fillOpacity="0.01" />
+      <path fillRule="evenodd" clipRule="evenodd" d="M20 24H44H20Z" fill="none" />
+      <path d="M20 24H44" stroke={color} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+      <path fillRule="evenodd" clipRule="evenodd" d="M20 38H44H20Z" fill="none" />
+      <path d="M20 38H44" stroke={color} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+      <path fillRule="evenodd" clipRule="evenodd" d="M20 10H44H20Z" fill="none" />
+      <path d="M20 10H44" stroke={color} strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+      <rect x="4" y="34" width="8" height="8" fill="none" stroke={color} strokeWidth="4" strokeLinejoin="round" />
+      <rect x="4" y="20" width="8" height="8" fill="none" stroke={color} strokeWidth="4" strokeLinejoin="round" />
+      <rect x="4" y="6" width="8" height="8" fill="none" stroke={color} strokeWidth="4" strokeLinejoin="round" />
+    </svg>
+  )
+}

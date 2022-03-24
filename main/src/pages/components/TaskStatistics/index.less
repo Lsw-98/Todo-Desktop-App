@@ -10,12 +10,24 @@
 }
 
 .cards{
-  display: flex;
-  .ant-statistic-title, .ant-statistic-content{
-    font-weight: 700;
-  }
-  .ant-statistic-title{
-    font-size: 20px;
+  &-tool-bar{
+    height: 80px;
+    padding: 10px;
+    display: flex;
+    &-icon{
+      height: 100%;
+      align-self: flex-end;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      width: 20px;
+      transition: all 0.2s;
+      margin-left: auto;
+      &:hover{
+        // 实现放大效果
+        transform: scale(1.3);
+      }
+    }
   }
 }
 
@@ -31,6 +43,10 @@
   transition: box-shadow 0.2s;
   box-shadow: 0 0 3px 3px rgba(0, 0, 0, 0.1);
   position: relative;
+
+  &-hidden{
+    display: none;
+  }
 
   &-title{
     font-weight: 700;

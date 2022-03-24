@@ -16,6 +16,8 @@ import moment from 'moment'
 import 'react-grid-layout/css/styles.css'
 import 'react-resizable/css/styles.css'
 import { getLocal, saveLocal } from '@/utils'
+import { Checkbox, Popover } from 'antd';
+import { CardIcon } from "@/components/Icon";
 
 interface IProps {
   countResult: Record<string, number>
@@ -30,9 +32,19 @@ export default function TaskStatistics(props: IProps) {
     { i: "finishTask", x: 4, y: 0, w: 3, h: 3 },
     { i: "progress", x: 4, y: 0, w: 3, h: 3 },
     { i: "outTimeTask", x: 4, y: 0, w: 3, h: 3 },
-  ];
+  ]
+
+  const DEFAULT_CARDS = [
+    { i: "chart", title: "任务完成比" },
+    { i: "todayTask", title: "今日剩余任务" },
+    { i: "todayFinishTask", title: "今日已完成任务" },
+    { i: "finishTask", title: "累计完成任务" },
+    { i: "progress", title: "任务进度" },
+    { i: "outTimeTask", title: "已截止任务" },
+  ]
 
   const LAYOUT_LOCAL_KEY = "todo-layout"
+  const CARD_LOCAL_KEY = "todo-cards"
 
   const { countResult } = props
   // todayFinishT：今天需要完成的任务
@@ -43,6 +55,8 @@ export default function TaskStatistics(props: IProps) {
   const [outTimeT, setOoutTimeT] = useState<TaskType[]>([])
   // 设置布局记忆
   const [layout, setLayout] = useState<GridLayout.Layout[]>(getLocal(LAYOUT_LOCAL_KEY, DEFAULT_LAYOUT))
+  // 当前已展示的卡片
+  const [showCard, setShowCard] = useState<string[]>(getLocal(CARD_LOCAL_KEY, DEFAULT_CARDS))
 
   // 今天剩余任务量
   const todayTask = useMemo(() => {
@@ -220,8 +234,9 @@ export default function TaskStatistics(props: IProps) {
     ]
     // 遍历卡片加载
     return cards.map(item => (
-
-      <div className={`card card-theme-${item.theme}`} key={item.key} >
+      <div
+        className={`card card-theme-${item.theme} ${showCard.includes(item.key) ? '' : 'card-hidden'}`}
+        key={item.key} >
         <div className="card-container-title">{item.title}</div>
         {
           item.content()
@@ -230,12 +245,39 @@ export default function TaskStatistics(props: IProps) {
     ))
   }
 
+  // 如果卡片布局发生变化，更新localstorage
   const handleLayoutChange = (value: GridLayout.Layout[]) => {
     saveLocal(LAYOUT_LOCAL_KEY, value)
   }
 
+  /**
+   * 选择可见的卡片，更改showCard状态
+   * @param checkedValue :被选中的对象数组
+   */
+  const handleCardsChange = (checkedValue: any[]) => {
+    setShowCard(checkedValue)
+    saveLocal(CARD_LOCAL_KEY, checkedValue)
+  }
+
+  const menu = (
+    <Checkbox.Group
+      onChange={handleCardsChange}
+      options={DEFAULT_CARDS.map(item => ({ value: item.i, label: item.title }))}
+      value={showCard}
+      style={{ display: "flex", flexDirection: 'column' }}
+    >
+    </Checkbox.Group>
+  );
+
   return (
     <div className='cards'>
+      <div className="cards-tool-bar">
+        <Popover content={menu} title="卡片配置" trigger="hover">
+          <div className="cards-tool-bar-icon">
+            <CardIcon />
+          </div>
+        </Popover>
+      </div>
       <GridLayout
         className="layout"
         layout={layout}
