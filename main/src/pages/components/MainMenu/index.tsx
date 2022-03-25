@@ -5,9 +5,6 @@
 import './index.less'
 import MenuItem from './MenuItem';
 import config from './config';
-import { useEffect, useState } from 'react';
-import { api } from '@/api';
-import apiConfig from '@/api/config';
 
 interface IProps {
   activeKey: number

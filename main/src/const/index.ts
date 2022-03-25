@@ -16,6 +16,7 @@ export const MENU_KEY = {
   DONE: 1,
   CALENDAR: 2,
   STATISTICS: 3,
+  SETTING: 4,
 }
 
 // 任务栏菜单项

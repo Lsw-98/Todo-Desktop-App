@@ -247,6 +247,10 @@ export default function TaskStatistics(props: IProps) {
 
   // 如果卡片布局发生变化，更新localstorage
   const handleLayoutChange = (value: GridLayout.Layout[]) => {
+    // 响应式echarts图表
+    Object.values(chartRefs.current).forEach(c => {
+      c.resize()
+    })
     saveLocal(LAYOUT_LOCAL_KEY, value)
   }
 

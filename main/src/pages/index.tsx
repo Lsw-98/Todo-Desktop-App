@@ -1,8 +1,10 @@
 import { api } from '@/api';
 import apiConfig from '@/api/config';
 import { MENU_KEY } from '@/const';
+import { getLocal, saveLocal } from '@/utils';
 import { useEffect, useState } from 'react';
 import MainMenu from './components/MainMenu';
+import Setting from './components/Setting';
 import TaskCalendar from './components/TaskCalendar';
 import TaskList from './components/TaskList';
 import TaskStatistics from './components/TaskStatistics';
@@ -19,6 +21,12 @@ export default function IndexPage() {
     'done': 0,
   })
 
+  const SETTINGS_LOCAL_KEY = "todo-settings"
+  const DEFAULT_SETTINGS = {
+    mainColor: '#2261e4',
+    radius: '6px',
+  }
+
   // 每次任务状态更新时同步更新任务数量
   useEffect(() => {
     getCount()
@@ -30,6 +38,16 @@ export default function IndexPage() {
       setCountResult(res.data)
     })
   }
+
+  const [settings, setSettings] = useState(getLocal(SETTINGS_LOCAL_KEY, DEFAULT_SETTINGS))
+
+  useEffect(() => {
+    Object.entries(settings).forEach(item => {
+      const [key, value] = item
+      document.documentElement.style.setProperty(`--${key}`, String(value))
+    })
+    saveLocal(SETTINGS_LOCAL_KEY, settings)
+  }, [settings])
 
   return (
     <div className='page container'>
@@ -49,6 +67,16 @@ export default function IndexPage() {
         }
         {
           tab === MENU_KEY.STATISTICS && <TaskStatistics countResult={countResult} />
+        }
+        {
+          tab === MENU_KEY.SETTING &&
+          <Setting
+            settings={settings}
+            onSubmit={(newSettings) => {
+              setSettings(newSettings)
+              setUpdateFlag((pre) => pre + 1)
+            }}
+          />
         }
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { CalendarIcon, DataIcon, DoingIcon, DoneIcon } from "@/components/Icon"
+import { CalendarIcon, DataIcon, DoingIcon, DoneIcon, SettingIcon } from "@/components/Icon"
 import { MENU_KEY } from "@/const"
 
 const config = [
@@ -26,6 +26,12 @@ const config = [
     key: MENU_KEY.STATISTICS,
     apiKey: '',
     icon: (active: boolean) => <DataIcon active={active} />,
+  },
+  {
+    name: "设置",
+    key: MENU_KEY.SETTING,
+    apiKey: '',
+    icon: (active: boolean) => <SettingIcon active={active} />,
   },
 ]
 
