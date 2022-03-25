@@ -35,13 +35,6 @@ export default function TaskCalendar(props: IProps) {
     })
     calendarRef.current = calendar
     getLastestList()
-    // return () => {
-    //   // 若calendar Dom元素已经被渲染了，则将其清空
-    //   const dom = document.querySelector('#calendar')
-    //   if (dom) {
-    //     dom.innerHTML = ''
-    //   }
-    // }
   }, [])
 
   useEffect(() => {
