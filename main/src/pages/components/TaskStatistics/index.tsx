@@ -60,8 +60,8 @@ export default function TaskStatistics(props: IProps) {
 
   // 今天剩余任务量
   const todayTask = useMemo(() => {
-    return otherFinishT.length
-  }, [otherFinishT])
+    return otherFinishT.length - outTimeT.length
+  }, [otherFinishT, outTimeT])
 
   // 今天完成任务量
   const todayFinishTask = useMemo(() => {
@@ -119,6 +119,8 @@ export default function TaskStatistics(props: IProps) {
     if (chartRefs.current?.['task-progress'] && todayFinishTask !== undefined && todayTask !== undefined) {
       const chartObj = chartRefs.current['task-progress']
       const percentage = (todayFinishTask / (todayFinishTask + todayTask)) * 100
+
+
       const option = getProgress(isNaN(percentage) ? 0 : percentage)
       chartObj.setOption(option)
     }
@@ -141,25 +143,25 @@ export default function TaskStatistics(props: IProps) {
         })
 
         // 得到今天的日期
-        const today = moment().format("YYYY-MM-DD")
-
+        const YMDtoday = moment().format("YYYY-MM-DD")
+        const today = moment()
         // 得到已截止的任务
         const outTimeTask = LastestList.filter((item: TaskType) => {
-          return moment(item.endTime, "YYYY-MM-DD").isBefore(today)
+          return moment(item.endTime).isBefore(today)
         })
         setOoutTimeT(outTimeTask)
 
         if (count === 1) {
           // 得到今天完成的任务
           const todayTask = LastestList.filter((item: TaskType) => {
-            return moment(item.finishTime, "YYYY-MM-DD").isSame(today)
+            return moment(item.finishTime, "YYYY-MM-DD").isSame(YMDtoday)
           })
           setTodayFinishT(todayTask)
 
         } else {
           // 得到今天和今天之前的任务
           const otherTask = LastestList.filter((item: TaskType) => {
-            return moment(item.startTime, "YYYY-MM-DD").isSameOrBefore(today)
+            return moment(item.startTime).isSameOrBefore(today)
           })
           setOtherFinishT(otherTask)
         }
