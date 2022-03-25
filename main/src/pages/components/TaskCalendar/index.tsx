@@ -21,13 +21,13 @@ export default function TaskCalendar(props: IProps) {
   const { } = props
   // tasks：创建的任务
   const [tasks, setTasks] = useState<TaskType[]>([])
-
+  const [view, setView] = useState('month')
   const calendarRef = useRef<any>()
 
   // 当页面第一次渲染时，加载calendar
   useEffect(() => {
     const calendar = new Calendar('#calendar', {
-      defaultView: 'month',
+      defaultView: view,
       taskView: true,
       useDetailPopup: true,    // 任务详细信息小抽屉
       disableClick: true,
@@ -65,6 +65,11 @@ export default function TaskCalendar(props: IProps) {
     }
   }, [tasks])
 
+  const viewChange = (v: string) => {
+    setView(v)
+    calendarRef.current.changeView(v)
+  }
+
   const getLastestList = () => {
     getApi(apiConfig.list.url, {
       type: MENU_KEY.DOING
@@ -100,12 +105,20 @@ export default function TaskCalendar(props: IProps) {
 
   return (
     <div className='calendar-container'>
-      <div className="calendar-btns">
-        <Button onClick={() => changePage(-1)} size="small">上个月</Button>
-        <Button onClick={() => changePage(0)} size="small">今天</Button>
-        <Button onClick={() => changePage(1)} size="small">下个月</Button>
-      </div>
+      <div className='calendar-container-tools'>
+        <div className="calendar-btns">
+          <Button onClick={() => changePage(-1)} size="small">上一页</Button>
+          <Button onClick={() => changePage(0)} size="small">今天</Button>
+          <Button onClick={() => changePage(1)} size="small">下一页</Button>
+        </div>
+
+        <div className="calendar-btns">
+          <Button onClick={() => viewChange("day")} size="small">日视图</Button>
+          <Button onClick={() => viewChange("week")} size="small"> 周视图</Button>
+          <Button onClick={() => viewChange("month")} size="small"> 月视图</Button>
+        </div>
+      </div >
       <div id="calendar"></div>
-    </div>
+    </div >
   )
 }
