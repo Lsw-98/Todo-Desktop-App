@@ -1,10 +1,5 @@
 # 记录开发过程中踩的坑以及开发过程
 
-# 目前存在的bug
-1. 任务进度显示NaN
-# 想做的功能
-1. 将任务左栏做收缩功能
-
 # 所用技术栈
 react + umi + electron（开发桌面应用程序）+ express + antd + IconPark（图标库）  
 
@@ -357,3 +352,44 @@ for (const [key, value] of Object.entries(object1)) {
 # 项目难点：记忆布局
 在任务统计页面设计了几个小卡片，方便清晰的展示任务，这些小卡片使用"react-grid-layout"库进行包裹，实现了自由拖动的效果，但是每次刷新页面都不能记住上次拖动的位置，所以这里实现了记忆上次拖动后的布局位置功能。  
 这里的想法是运用localstorage。首先初始化一个layout状态用来存储拖动后的GridLayout属性，然后使用localStorage.setItem方法将新的layout状态储存起来。在首次进入到页面时调用localStorage.getItem方法，如果没有layout，则使用初始化的layout，若有layout，则使用localStorage中的layout。
+
+# 项目打包
+1. 在**main**目录下执行yarn build对项目进行构建，构建完成后将**main/dist/**文件夹下的umi.js和umi.css文件复制到**app/server/public/**下；
+2. 在app目录下执行 **yarn add --dev @electron-forge/cli**命令，然后执行**npx electron-forge import**命令，导入electron生命应用程序的脚本。
+3. 最后执行**yarn make**命令将项目生成为一个应用程序。
+
+## 踩坑
+在执行**yarn make**命令时可能会报如下错误：
+```js
+Making for the following targets: squirrel
+✖ Making for target: squirrel - On platform: win32 - For arch: x64
+
+An unhandled error has occurred inside Forge:
+An error occured while making for target: squirrel
+Failed with exit code: 1
+Output:
+���ڳ��Դӡ�todo_desktop_app.nuspec�����ɳ������
+Authors is required.
+Description is required.
+
+Error: Failed with exit code: 1
+Output:
+���ڳ��Դӡ�todo_desktop_app.nuspec�����ɳ������
+Authors is required.
+Description is required.
+
+    at ChildProcess.<anonymous> (D:\project\Todo_Desktop_App\app\node_modules\electron-winstaller\src\spawn-promise.ts:52:16)
+    at ChildProcess.emit (node:events:390:28)
+    at ChildProcess.emit (node:domain:475:12)
+    at maybeClose (node:internal/child_process:1064:16)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:301:5)
+error Command failed with exit code 1.
+info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this command.
+```
+原因是在app文件夹下的**package.json**文件没有加**description和author**，加上就可以执行成功了。
+
+## 去除electron自带的菜单栏
+在**app**文件夹下的index.js中加入 **win.menuBarVisible = false**
+
+# 在任务栏顶部的Toolbar中加入插槽
+

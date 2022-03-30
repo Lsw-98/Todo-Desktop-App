@@ -14,10 +14,12 @@ interface IProps {
   tasks: TaskType[]
   onClick: (key: string) => void
   onSearch: (key: string) => void
+  // 细化任务
+  refineTask?: JSX.Element
 }
 
 export default function TaskToolBar(props: IProps) {
-  const { onClick, tasks, onSearch } = props
+  const { onClick, tasks, onSearch, refineTask } = props
 
   // 设置搜索框选项
   const searchOptions = useMemo(() => {
@@ -70,6 +72,7 @@ export default function TaskToolBar(props: IProps) {
 
   return (
     <div className='task-tool-bar'>
+      <div className="refine-task">{refineTask}</div>
       <div className='task-tool-bar-content'>
         {/* 渲染搜索框 */}
         {renderSearchTask()}

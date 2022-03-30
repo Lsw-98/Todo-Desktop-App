@@ -4,7 +4,7 @@
 
 import './index.less'
 import TaskItem from './TaskItem';
-import { message } from 'antd'
+import { message, Radio } from 'antd'
 import { useEffect, useMemo, useState } from 'react'
 import moment from 'moment'
 import apiConfig from '@/api/config';
@@ -44,6 +44,8 @@ export default function TaskList(props: IProps) {
   const [sort, setSort] = useState(getLocal(SORT_LOCAL_KEY, 'sort-start'))
   // 过滤任务，在搜索框输入文字后过滤掉不含输入文字的任务
   const [filter, setFilter] = useState('')
+  // 任务细化
+  const [classiFier, setClassiFier] = useState('0')
 
   // 任务排序，当sort变化时，重新排序
   const sortTasks = useMemo<TaskType[]>(() => {
@@ -58,7 +60,7 @@ export default function TaskList(props: IProps) {
     })
   }, [tasks, sort])
 
-  // 过滤任务
+  // 输入框过滤任务
   const filteredTasks = useMemo<TaskType[]>(() => {
     // 如果filter有值(输入框输入了内容)，则过滤
     if (filter) {
@@ -70,6 +72,26 @@ export default function TaskList(props: IProps) {
       return sortTasks
     }
   }, [sortTasks, filter])
+
+  // 按钮点击细分任务
+  const classifierTasks = useMemo(() => {
+    switch (classiFier) {
+      case "0":
+        return filteredTasks
+
+      case "1":
+        return
+
+      case "2":
+        return
+
+      case "3":
+        return
+
+      default:
+        return filteredTasks
+    }
+  }, [filteredTasks, classiFier])
 
   // 当菜单项点击发生变化时，更新task列表内容
   useEffect(() => {
@@ -178,6 +200,46 @@ export default function TaskList(props: IProps) {
     })
   }
 
+  // 细化任务
+  const taskClassifier = () => {
+    const config = [
+      {
+        key: "0",
+        title: "全部任务"
+      },
+      {
+        key: "1",
+        title: "今日任务"
+      },
+      {
+        key: "2",
+        title: "待开始任务"
+      },
+      {
+        key: "3",
+        title: "已截止任务"
+      },
+    ]
+    return (
+      <div>
+        <Radio.Group
+          defaultValue={classiFier}
+          buttonStyle="solid"
+          onChange={(event) => {
+            setClassiFier(event.target.value)
+          }}
+          size="small"
+        >
+          {
+            config.map((item) => (
+              <Radio.Button value={item.key} key={item.key}>{item.title}</Radio.Button>
+            ))
+          }
+        </Radio.Group>
+      </div >
+    )
+  }
+
   return (
     <>
       <TaskToolBar
@@ -189,6 +251,7 @@ export default function TaskList(props: IProps) {
         onSearch={(content) => {
           setFilter(content)
         }}
+        refineTask={taskClassifier()}
       />
       <div className='task-list'>
         {
