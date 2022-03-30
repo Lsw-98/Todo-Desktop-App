@@ -6,7 +6,7 @@ import './index.less'
 import TaskItem from './TaskItem';
 import { message, Radio } from 'antd'
 import { useEffect, useMemo, useState } from 'react'
-import moment from 'moment'
+import moment, { months } from 'moment'
 import apiConfig from '@/api/config';
 import { getApi, postApi } from '@/api';
 import { API_RESULT, MENU_KEY, TASK_STATUS } from '@/const';
@@ -75,18 +75,32 @@ export default function TaskList(props: IProps) {
 
   // 按钮点击细分任务
   const classifierTasks = useMemo(() => {
+    const today = new Date().toISOString().split('T')[0]
+    const momentToday = moment().toISOString()
+
     switch (classiFier) {
-      case "0":
+      case "0":  // 全部任务
         return filteredTasks
 
-      case "1":
-        return
+      case "1":  // 今日任务
+        return filteredTasks.filter((item: TaskType) => (
+          item.startTime.isSameOrBefore(momentToday) && item.endTime.isAfter(momentToday)
+        ))
 
-      case "2":
-        return
+      case "2":  // 待开始任务
+        return filteredTasks.filter((item: TaskType) => (
+          item.startTime.isAfter(momentToday)
+        ))
 
-      case "3":
-        return
+      case "3":  // 已截止任务
+        return filteredTasks.filter((item: TaskType) => (
+          item.endTime.isBefore(momentToday)
+        ))
+      case "4":  // 将要截止任务
+        return filteredTasks.filter((item: TaskType) => {
+          const endTime = item.endTime.toISOString().split('T')[0]
+          return moment(endTime).isSame(moment(today)) && item.endTime.isAfter(momentToday)
+        })
 
       default:
         return filteredTasks
@@ -219,6 +233,10 @@ export default function TaskList(props: IProps) {
         key: "3",
         title: "已截止任务"
       },
+      {
+        key: "4",
+        title: "将要截止任务"
+      },
     ]
     return (
       <div>
@@ -261,7 +279,7 @@ export default function TaskList(props: IProps) {
         <div className='task-item-container'>
           {
             // 遍历任务列表
-            filteredTasks.map((item) => (
+            classifierTasks.map((item) => (
               <TaskItem
                 task={item}
                 key={item.title}
