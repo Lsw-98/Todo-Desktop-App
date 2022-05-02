@@ -232,7 +232,7 @@ const [tasks, setTasks] = useState<TaskType[]>([])
 
 # 知识点：react.memo和useMemo()
 ## 什么是 memoization？
-memoization是一个过程，允许我们<font color="#FF6347">缓存递归/昂贵的函数调用值</font>，在下次使用相同参数调用函数时，直接返回缓存之还不是重新计算。有时我们的代码会做很多冗余的操作，使性能变差。使用memoization可以使我们的程序运行得更快，提高性能。
+memoization是一个过程，允许我们<font color="#FF6347">缓存递归/昂贵的函数调用值</font>，在下次使用相同参数调用函数时，直接返回缓存值而不是重新计算。有时我们的代码会做很多冗余的操作，使性能变差。使用memoization可以使我们的程序运行得更快，提高性能。
 
 ## React中的memoization
 在React函数组件中，当组件中的某些props发生变化时，默认情况下整个组件都会重新渲染，包括其它未更改的props值。如果一个组件显示上万条数据，每个用户点击一次按钮，该组件中的每条数据都会重新渲染一次，这将是很大的开销。所以必须要使用memoization对这些数据进行管理，提升性能。
@@ -390,6 +390,3 @@ info Visit https://yarnpkg.com/en/docs/cli/run for documentation about this comm
 
 ## 去除electron自带的菜单栏
 在**app**文件夹下的index.js中加入 **win.menuBarVisible = false**
-
-# 在任务栏顶部的Toolbar中加入插槽
-

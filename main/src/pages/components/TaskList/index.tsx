@@ -6,7 +6,7 @@ import './index.less'
 import TaskItem from './TaskItem';
 import { message, Radio } from 'antd'
 import { useEffect, useMemo, useState } from 'react'
-import moment, { months } from 'moment'
+import moment from 'moment'
 import apiConfig from '@/api/config';
 import { getApi, postApi } from '@/api';
 import { API_RESULT, MENU_KEY, TASK_STATUS } from '@/const';
